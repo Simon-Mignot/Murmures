@@ -5,4 +5,10 @@ package epsi.projet.jicdsmdq.murmures.Classes;
  */
 public class Network
 {
+    public void send(Message message,Group group){
+
+    }
+    public void send(Message message, User user){
+
+    }
 }
