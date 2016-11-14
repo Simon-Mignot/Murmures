@@ -1,4 +1,4 @@
-package Classes;
+package epsi.projet.jicdsmdq.murmures.Classes;
 
 /**
  * Created by Simon on 14/11/2016.
