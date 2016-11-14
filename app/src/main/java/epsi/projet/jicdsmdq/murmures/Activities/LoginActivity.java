@@ -1,11 +1,13 @@
-package epsi.projet.jicdsmdq.murmures;
+package epsi.projet.jicdsmdq.murmures.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity
+import epsi.projet.jicdsmdq.murmures.R;
+
+public class LoginActivity extends AppCompatActivity
 {
 
     @Override
