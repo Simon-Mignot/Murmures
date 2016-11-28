@@ -1,10 +1,13 @@
 package epsi.projet.jicdsmdq.murmures.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 
 import epsi.projet.jicdsmdq.murmures.R;
 
@@ -19,6 +22,17 @@ public class LoginActivity extends AppCompatActivity
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        setContentView(R.layout.acivity_login);
+
+        final Button loginButton = (Button) findViewById(R.id.connect);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

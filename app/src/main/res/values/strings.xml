@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">Murmures</string>
 
+<<<<<<< HEAD
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Options</string>
+=======
+    <string name="action_settings">Settings</string>
+    <string name="pseudo">Pseudo</string>
+    <string name="login">Login</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+>>>>>>> origin/master
 </resources>
