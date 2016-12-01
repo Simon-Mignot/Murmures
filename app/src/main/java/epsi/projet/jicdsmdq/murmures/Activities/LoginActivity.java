@@ -18,11 +18,10 @@ public class LoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.acivity_login);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        setContentView(R.layout.acivity_login);
 
         final Button loginButton = (Button) findViewById(R.id.connect);
         loginButton.setOnClickListener(new View.OnClickListener() {
