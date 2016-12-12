@@ -2,9 +2,11 @@ package epsi.projet.jicdsmdq.murmures.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import epsi.projet.jicdsmdq.murmures.Classes.Network;
 import epsi.projet.jicdsmdq.murmures.R;
 
 public class LoginActivity extends AppCompatActivity
@@ -15,6 +17,8 @@ public class LoginActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Network n = new Network();
+        n.test();
     }
 
     @Override
