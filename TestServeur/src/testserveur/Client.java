@@ -5,6 +5,12 @@
  */
 package testserveur;
 
+import java.io.ByteArrayOutputStream;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -17,17 +23,33 @@ class Client
 	{
 
 	}
-	public Client(String _name, String _ip)
+	public Client(String _name, InetAddress _ip)
 	{
 		name = _name;
 		ip = _ip;
+		lastKeepalive = new Date();
 	}
 	
+	public void resetKeepalive()
+	{
+		System.out.println((new Date().getTime() - lastKeepalive.getTime())/1000.);
+		lastKeepalive = new Date();
+	}
+	
+	public byte[] toBytesArray()
+	{
+		String firstPart = new String(name + '\0');
+		int firstPartLength = firstPart.length();
+		byte[] out = new byte[firstPartLength + 4];
+		System.arraycopy(firstPart.getBytes(), 0, out, 0, firstPartLength);
+		System.arraycopy(ip.getAddress(), 0, out, firstPartLength, 4);
+		return out;
+	}
 	
 	@Override
 	public String toString()
 	{
-		return (name + ";" + ip);
+		return (name + '\n' + ip.getHostAddress());
 	}
 	@Override
 	public boolean equals(Object o)
@@ -45,5 +67,6 @@ class Client
 		return hash;
 	}
 	public String name;
-	public String ip;
+	public InetAddress ip;
+	public Date lastKeepalive;
 }
