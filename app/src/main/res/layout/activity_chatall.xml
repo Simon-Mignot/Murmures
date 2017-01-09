@@ -12,11 +12,13 @@
         android:id="@+id/textView3"
         android:textAlignment="center" />
 
-    <TextView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView5"
-        android:layout_weight="0.87" />
+        android:layout_height="348dp"
+        android:id="@+id/textchatall"
+        android:transcriptMode="alwaysScroll"
+        android:stackFromBottom="true"
+        android:layout_weight="0.95" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -28,13 +30,13 @@
             android:layout_height="match_parent"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/editText" />
+            android:id="@+id/message" />
 
         <Button
             android:text="OK"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button"
+            android:id="@+id/send"
             android:layout_weight="1" />
     </LinearLayout>
 

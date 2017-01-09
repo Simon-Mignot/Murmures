@@ -1,8 +1,7 @@
 
 package epsi.projet.jicdsmdq.murmures.Activities;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.app.ListActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -16,9 +15,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.content.Intent;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+import epsi.projet.jicdsmdq.murmures.Classes.Group;
+import epsi.projet.jicdsmdq.murmures.Classes.GroupeList;
+import epsi.projet.jicdsmdq.murmures.Classes.Message;
+import epsi.projet.jicdsmdq.murmures.Classes.UserList;
+import epsi.projet.jicdsmdq.murmures.Classes.User;
 import epsi.projet.jicdsmdq.murmures.R;
 
 public class HomeActivity extends AppCompatActivity {
@@ -38,16 +49,22 @@ public class HomeActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Intent intent = getIntent();
+        String pseudo = intent.getStringExtra("pseudo");
+        intent = new Intent(this, SectionsPagerAdapter.class);
+        intent.putExtra("pseudo", pseudo);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -95,14 +112,17 @@ public class HomeActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
+
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
+        public static PlaceholderFragment newInstance(int sectionNumber,String pseudo) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+
+            args.putString("pseudo",pseudo);
             fragment.setArguments(args);
             return fragment;
         }
@@ -112,8 +132,33 @@ public class HomeActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = null;
+            final String pseudo = getArguments().getString("pseudo");
+            UserList userList = UserList.getInstance();
+            GroupeList groupeList = GroupeList.getInstance();
+
             if(getArguments().getInt(ARG_SECTION_NUMBER)==1){
-                rootView = inflater.inflate(R.layout.activity_chatall, container, false);
+                 final Group general = new Group("General");
+                 groupeList.addGroup(general);
+                 rootView = inflater.inflate(R.layout.activity_chatall, container, false);
+                 final ListView list = (ListView) rootView.findViewById(R.id.textchatall);
+                 ArrayAdapter ad = new ArrayAdapter(this.getContext(),
+                        android.R.layout.simple_list_item_1, general.getChannel());
+                 list.setAdapter(ad);
+                 final View sendView=rootView;
+                 final Button sendbutton = (Button) rootView.findViewById(R.id.send);
+                 sendbutton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                        EditText message = (EditText) sendView.findViewById(R.id.message);
+                        general.addMessage(new Message(new User(pseudo),message.getText().toString()));
+                        message.setText("");
+
+                    }
+                });
+
+
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==2){
                 rootView = inflater.inflate(R.layout.activity_chatgroup, container, false);
@@ -134,21 +179,30 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+
+
+    public void refresh(){
+
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        private String pseudo;
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+            Intent intent = getIntent();
+            pseudo = intent.getStringExtra("pseudo");
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position + 1,pseudo);
         }
 
         @Override

@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import epsi.projet.jicdsmdq.murmures.R;
 
@@ -28,7 +29,10 @@ public class LoginActivity extends AppCompatActivity
 
             @Override
             public void onClick(View v) {
+
+                EditText Pseudo = (EditText) findViewById(R.id.Pseudo);
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                intent.putExtra("pseudo",Pseudo.getText().toString());
                 startActivity(intent);
             }
         });
