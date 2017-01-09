@@ -1,62 +1,71 @@
 package epsi.projet.jicdsmdq.murmures.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import epsi.projet.jicdsmdq.murmures.R;
 
 public class LoginActivity extends AppCompatActivity
 {
+    private EditText editTextPseudo;
+    private TextInputLayout textInputLayoutPseudo;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acivity_login);
+        setTitle(getString(R.string.login_label_menu));
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+        editTextPseudo = (EditText) findViewById(R.id.editTextPseudo);
+        textInputLayoutPseudo = (TextInputLayout) findViewById(R.id.textInputLayoutPseudo);
+        loginButton = (Button) findViewById(R.id.buttonConnexion);
 
-        final Button loginButton = (Button) findViewById(R.id.connect);
+        editTextPseudo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    loginButton.callOnClick();
+                }
+                return false;
+            }
+        });
+
         loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                startActivity(intent);
+                if (editTextPseudo.getText().toString().trim().isEmpty())
+                {
+                    textInputLayoutPseudo.setError(getString(R.string.err_msg_pseudo));
+                    //editTextPseudo.setHintTextColor(getResources().getColor(R.color.colorError));
+                    Animation shake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
+                    textInputLayoutPseudo.startAnimation(shake);
+                }
+                else
+                {
+                    textInputLayoutPseudo.setError(null);
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                }
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
-                return true;
-
-            case R.id.action_favorite:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-        }
     }
 }
