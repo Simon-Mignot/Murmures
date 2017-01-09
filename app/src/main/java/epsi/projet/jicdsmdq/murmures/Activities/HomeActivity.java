@@ -110,9 +110,26 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+
+            View rootView = null;
+            if(getArguments().getInt(ARG_SECTION_NUMBER)==1){
+                rootView = inflater.inflate(R.layout.activity_chatall, container, false);
+            }
+            else if(getArguments().getInt(ARG_SECTION_NUMBER)==2){
+                rootView = inflater.inflate(R.layout.activity_chatgroup, container, false);
+            }
+            else if(getArguments().getInt(ARG_SECTION_NUMBER)==3){
+                rootView = inflater.inflate(R.layout.activity_chat1to1, container, false);
+            }
+
+            /*TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            if(getArguments().getInt(ARG_SECTION_NUMBER)==1){
+                textView.setText("page 1");
+            }
+            else {
+                textView.setText("autre pages");
+            }*/
             return rootView;
         }
     }
