@@ -5,20 +5,17 @@
  */
 package testserveur;
 
-import static com.oracle.jrockit.jfr.ContentType.Bytes;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -27,10 +24,13 @@ import java.util.Vector;
 public class TestServeur
 {
 	static private HashMap<String, Client> clients;
-	static private final int LOGIN          = 0x01; // 0000 0001
-	static private final int KEEP_ALIVE     = 0x02; // 0000 0010
-	static private final int USER_LIST      = 0x04; // 0000 0100
-	static private final int GLOBAL_MESSAGE = 0x08; // 0000 1000
+	static private final int NETWORK_PORT = 65500;
+	static private final int LOGIN           = 0x01; // 0000 0001
+	static private final int KEEP_ALIVE      = 0x02; // 0000 0010
+	static private final int USER_LIST       = 0x04; // 0000 0100
+	static private final int GLOBAL_MESSAGE  = 0x08; // 0000 1000
+	static private final int PRIVATE_MESSAGE = 0x16; // 0001 0000
+	static private final int GROUP_MESSAGE   = 0x32; // 0010 0000
 	
 	public static void addClient(Client client)
 	{
@@ -47,6 +47,7 @@ public class TestServeur
 	public static byte[] getClientsList()
 	{
 		ArrayList<Byte> data = new ArrayList<Byte>();
+		data.add((byte)USER_LIST);
 		Iterator it = clients.entrySet().iterator();
 		while(it.hasNext())
 		{
@@ -80,6 +81,34 @@ public class TestServeur
 		}
 	}
 	
+	private static void sendMessage(String message, Client client)
+	{
+		byte[] data = new byte[message.length() + 1];
+		System.arraycopy(message, 0, data, 1, message.length());
+		data[0] = PRIVATE_MESSAGE;
+		send(message.getBytes(), client);
+	}
+	
+	private static void send(byte[] data, Client client)
+	{
+		InetAddress IPAddress = client.ip;
+		int port = NETWORK_PORT;
+		DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress, port);
+		
+		System.out.println(new String(data));
+		try
+		{
+			new DatagramSocket(NETWORK_PORT).send(sendPacket);
+		}
+		catch(SocketException ex)
+		{
+			Logger.getLogger(TestServeur.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		catch(IOException ex)
+		{
+			Logger.getLogger(TestServeur.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 	
 	public static void handleDatagram(DatagramPacket packet)
 	{
@@ -89,7 +118,9 @@ public class TestServeur
 		{
 			case LOGIN:
 				System.out.println("LOGIN");
-				addClient(new Client(extractPseudo(data), packet.getAddress()));
+				Client c = new Client(extractPseudo(data), packet.getAddress());
+				addClient(c);
+				send(getClientsList(), c);
 				break;
 			case KEEP_ALIVE:
 				System.out.println("KEEP_ALIVE");
@@ -110,26 +141,27 @@ public class TestServeur
 	public static void main(String[] args) throws SocketException, IOException
 	{
 		clients = new HashMap<String, Client>();
-		DatagramSocket serverSocket = new DatagramSocket(65500);
+		DatagramSocket serverSocket = new DatagramSocket(NETWORK_PORT);
 		while(true)
 		{
 			byte[] receiveData = new byte[1024];
 			byte[] sendData = new byte[1024];
+			
+			// receive
 			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 			serverSocket.receive(receivePacket);
+			
 			handleDatagram(receivePacket);
-			String pseudo = new String(receivePacket.getData());
-			String ip = receivePacket.getAddress().getHostAddress();
-			System.out.println("RECEIVED from " + ip + " : " + pseudo);
 			
+			System.out.println("RECEIVED from " + receivePacket.getAddress().getHostAddress() + " : " + new String(receivePacket.getData()));
 			
-			
+			// send
 			InetAddress IPAddress = receivePacket.getAddress();
 			int port = receivePacket.getPort();
+			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 			
 			sendData = getClientsList();
 			System.out.println(new String(sendData));
-			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 			serverSocket.send(sendPacket);
 		}
 	}

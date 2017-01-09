@@ -5,3 +5,9 @@
 .DS_Store
 /build
 /captures
+*.jar
+TestServeur/dist/README.TXT
+TestServeur/manifest.mf
+TestServeur/build/
+TestServeur/nbproject/
+TestServeur/build.xml
