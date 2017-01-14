@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <TextView
-        android:text="ChatALL"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="29dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorChatAll"
+        android:elevation="4dp" >
+
+    <TextView
+        android:text="Chat All"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/textView3"
-        android:textAlignment="center" />
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center" />
+
+    </android.support.v7.widget.Toolbar>
+
+
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/textView5"
-        android:layout_weight="0.87" />
+        android:layout_weight="0.99" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -24,18 +38,21 @@
         android:layout_height="70dp">
 
         <EditText
-            android:layout_width="269dp"
+            android:id="@+id/editText"
+            android:layout_width="270dp"
             android:layout_height="match_parent"
+            android:textColor="@color/colorPrimaryText"
             android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/editText" />
+            android:imeOptions="actionDone"
+            android:hint="Message" />
 
         <Button
-            android:text="OK"
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button"
-            android:layout_weight="1" />
+            android:text="Envoyer"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
 </LinearLayout>
