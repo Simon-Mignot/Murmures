@@ -3,24 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorChatGroup"
-        android:elevation="4dp" >
-
-        <TextView
-            android:text="Chat Group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:layout_gravity="center" />
-
-    </android.support.v7.widget.Toolbar>
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

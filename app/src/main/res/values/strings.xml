@@ -12,7 +12,6 @@
     <string name="login_label_menu">Login</string>
 
     <!-- HOME -->
-    <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- ERREUR -->
     <string name="err_msg_pseudo">Votre Pseudo n\'est pas correct</string>

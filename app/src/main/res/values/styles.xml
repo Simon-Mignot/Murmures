@@ -14,4 +14,13 @@
         <item name="android:textColor">@color/colorPrimaryText</item>
         <item name="android:textColorPrimary">@color/colorTitleActivity</item>
     </style>
+
+    <style name="AppThemeChatAll" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorChatAll</item>
+        <item name="colorPrimaryDark">@color/colorChatAll</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textColorPrimary">@color/colorTitleActivity</item>
+    </style>
+
 </resources>
