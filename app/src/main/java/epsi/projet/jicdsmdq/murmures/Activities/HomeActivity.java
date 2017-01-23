@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -144,19 +145,28 @@ public class HomeActivity extends AppCompatActivity {
                  ArrayAdapter ad = new ArrayAdapter(this.getContext(),
                         android.R.layout.simple_list_item_1, general.getChannel());
                  list.setAdapter(ad);
+                 list.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Select the last row so it will scroll into view...
+                        Log.d("nbmessage","post");
+                    }
+                });
+
                  final View sendView=rootView;
                  final Button sendbutton = (Button) rootView.findViewById(R.id.send);
                  sendbutton.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-
                         EditText message = (EditText) sendView.findViewById(R.id.message);
+                       if(!(message.getText().toString().matches(""))) {
                         general.addMessage(new Message(new User(pseudo),message.getText().toString()));
                         message.setText("");
+                           list.setSelection(list.getAdapter().getCount() - 1);
 
-                    }
-                });
+                       }
+                }});
 
 
             }
