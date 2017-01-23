@@ -5,6 +5,7 @@
  */
 package testserveur;
 
+import Server.Server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -145,7 +146,7 @@ public class TestServeur
 				msg = msg.substring(1);
 				DataHandler.networkEvent(DataHandler.NEW_GLOBAL_MESSAGE, msg);
 				break;
-		};
+		}
 	}
 	
 	/**
@@ -153,7 +154,14 @@ public class TestServeur
 	 */
 	public static void main(String[] args) throws SocketException, IOException
 	{
-		clients = new HashMap<String, Client>();
+		Server server = new Server();
+	}
+}
+
+
+/*
+
+clients = new HashMap<String, Client>();
 		DatagramSocket serverSocket = new DatagramSocket(NETWORK_PORT);
 		while(true)
 		{
@@ -171,7 +179,6 @@ public class TestServeur
 			// send
 			InetAddress IPAddress = receivePacket.getAddress();
 			NetworkInterface ni = NetworkInterface.getByInetAddress(IPAddress);
-			System.out.println("mac");
 			
 			int port = receivePacket.getPort();
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
@@ -179,6 +186,5 @@ public class TestServeur
 			sendData = getClientsList();
 			System.out.println(new String(sendData));
 			serverSocket.send(sendPacket);
-		}
-	}
-}
+
+*/
