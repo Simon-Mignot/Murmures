@@ -1,0 +1,13 @@
+
+
+LOGIN:UDP 			->	<0x01>[:pseudo]
+KEEP_ALIVE:TCP 		->	<0x02>
+USER_LIST:TCP 		->	<0x04>{[:User]<0x00>}
+GLOBAL_MESSAGE:TCP	-> 	<0x08>[:message]
+PRIVATE_MESSAGE:TCP	->	<0x16>[:User]<0x00>[:message]
+GROUP_MESSAGE:TCP	->	<0x32>[:Group]<0x00>[:message]
+
+User		-> 	[:pseudo]<0x01>[:ip_address]
+Group		->	[:name]
+GroupUsers	->	[:name]<0x03>{[:User]<0x03>}
+
