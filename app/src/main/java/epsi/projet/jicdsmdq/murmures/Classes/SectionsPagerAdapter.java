@@ -13,6 +13,7 @@ import epsi.projet.jicdsmdq.murmures.Activities.HomeActivity;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Context mContext;
+    private String pseudo;
 
     public SectionsPagerAdapter(Context context,FragmentManager fm) {
         super(fm);
@@ -21,7 +22,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return HomeActivity.PlaceholderFragment.newInstance(position + 1);
+        return HomeActivity.PlaceholderFragment.newInstance(position + 1, pseudo);
     }
 
     @Override

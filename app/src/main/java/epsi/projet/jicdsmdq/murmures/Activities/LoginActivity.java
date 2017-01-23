@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity
                 {
                     textInputLayoutPseudo.setError(null);
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    intent.putExtra("pseudo", editTextPseudo.getText().toString());
                     startActivity(intent);
                 }
             }

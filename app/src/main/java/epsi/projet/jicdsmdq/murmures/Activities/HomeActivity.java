@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -51,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -60,7 +61,7 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    // Permet de créer le menu
+    // Permet de creer le menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -68,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
-    // Permet de créer les boutons du menu avec leurs différentes actions
+    // Permet de creer les boutons du menu avec leurs differentes actions
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -89,12 +90,12 @@ public class HomeActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
-        public static PlaceholderFragment newInstance(int sectionNumber) {
+        public static PlaceholderFragment newInstance(int sectionNumber, String pseudo) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
 
-            args.putString("pseudo",pseudo);
+            args.putString("pseudo", pseudo);
             fragment.setArguments(args);
             return fragment;
         }
@@ -112,7 +113,7 @@ public class HomeActivity extends AppCompatActivity {
                  final Group general = new Group("General");
                  groupeList.addGroup(general);
                  rootView = inflater.inflate(R.layout.activity_chatall, container, false);
-                 final ListView list = (ListView) rootView.findViewById(R.id.textchatall);
+                final ListView list = (ListView) rootView.findViewById(R.id.textchatall);
                  ArrayAdapter ad = new ArrayAdapter(this.getContext(),
                         android.R.layout.simple_list_item_1, general.getChannel());
                  list.setAdapter(ad);
@@ -125,12 +126,12 @@ public class HomeActivity extends AppCompatActivity {
                 });
 
                  final View sendView=rootView;
-                 final Button sendbutton = (Button) rootView.findViewById(R.id.send);
+                 final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);
                  sendbutton.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        EditText message = (EditText) sendView.findViewById(R.id.message);
+                        EditText message = (EditText) sendView.findViewById(R.id.messageText);
                        if(!(message.getText().toString().matches(""))) {
                         general.addMessage(new Message(new User(pseudo),message.getText().toString()));
                         message.setText("");
@@ -183,7 +184,7 @@ public class HomeActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1,pseudo);
+            return PlaceholderFragment.newInstance(position + 1, pseudo);
         }
 
         @Override
@@ -196,11 +197,11 @@ public class HomeActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "All";
                 case 1:
-                    return "SECTION 2";
+                    return "Groupes";
                 case 2:
-                    return "SECTION 3";
+                    return "Individuel";
             }
             return null;
         }

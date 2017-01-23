@@ -7,14 +7,22 @@ import java.util.Date;
  */
 public class Message
 {
-    String text;
+    String message;
     Date date;
-    public String getText() {
-        return text;
+    User user;
+
+    public Message(User user, String text)
+    {
+        message = text;
+        this.user = user;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.message = text;
     }
 
     public Date getDate() {
@@ -25,5 +33,9 @@ public class Message
         this.date = date;
     }
 
-
+    @Override
+    public String toString()
+    {
+        return user.getPseudo()+ ":" + getMessage();
+    }
 }

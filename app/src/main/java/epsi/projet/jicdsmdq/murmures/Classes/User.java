@@ -5,16 +5,18 @@ package epsi.projet.jicdsmdq.murmures.Classes;
  */
 public class User
 {
-    String Pseudo;
+    String pseudo;
     String id;
     String ip;
 
+    public User(String pseudo) {this.pseudo = pseudo;}
+
     public String getPseudo() {
-        return Pseudo;
+        return pseudo;
     }
 
     public void setPseudo(String pseudo) {
-        Pseudo = pseudo;
+        pseudo = pseudo;
     }
 
     public String getId() {
