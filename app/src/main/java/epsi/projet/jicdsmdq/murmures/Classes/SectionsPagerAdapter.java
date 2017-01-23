@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import epsi.projet.jicdsmdq.murmures.Activities.HomeActivity;
 
 /**
- * Created by Lightshark on 17/01/2017.
+ * Created by Corentin on 17/01/2017.
  */
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
