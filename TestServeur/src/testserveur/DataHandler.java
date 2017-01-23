@@ -9,6 +9,18 @@ package testserveur;
  *
  * @author Simon
  */
-public class DataHandler {
+public class DataHandler
+{
+	static final public int NEW_GLOBAL_MESSAGE = 0x1;
+	//static public ArrayList
 	
+	static public void networkEvent(int eventType, String data)
+	{
+		switch(eventType)
+		{
+			case NEW_GLOBAL_MESSAGE:
+				
+				break;
+		}
+	}
 }

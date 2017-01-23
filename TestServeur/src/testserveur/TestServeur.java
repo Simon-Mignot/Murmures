@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -81,6 +83,14 @@ public class TestServeur
 		}
 	}
 	
+	private static void sendMessage(String message)
+	{
+		byte[] data = new byte[message.length() + 1];
+		System.arraycopy(message, 0, data, 1, message.length());
+		data[0] = GLOBAL_MESSAGE;
+		send(message.getBytes(), new Client());
+	}
+	
 	private static void sendMessage(String message, Client client)
 	{
 		byte[] data = new byte[message.length() + 1];
@@ -98,7 +108,8 @@ public class TestServeur
 		System.out.println(new String(data));
 		try
 		{
-			new DatagramSocket(NETWORK_PORT).send(sendPacket);
+			DatagramSocket s = new DatagramSocket();
+			s.send(sendPacket);
 		}
 		catch(SocketException ex)
 		{
@@ -130,7 +141,9 @@ public class TestServeur
 				
 				break;
 			case GLOBAL_MESSAGE:
-				
+				String msg = new String(data);
+				msg = msg.substring(1);
+				DataHandler.networkEvent(DataHandler.NEW_GLOBAL_MESSAGE, msg);
 				break;
 		};
 	}
@@ -157,6 +170,9 @@ public class TestServeur
 			
 			// send
 			InetAddress IPAddress = receivePacket.getAddress();
+			NetworkInterface ni = NetworkInterface.getByInetAddress(IPAddress);
+			System.out.println("mac");
+			
 			int port = receivePacket.getPort();
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 			
