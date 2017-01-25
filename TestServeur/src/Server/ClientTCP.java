@@ -23,6 +23,10 @@ public class ClientTCP extends Thread
 {
 	private Socket socket;
 	private Host parentHost;
+	
+	private PrintStream out;
+	private InputStream in;
+	
 	public ClientTCP(String ip, int port)
 	{
 		try
@@ -39,8 +43,60 @@ public class ClientTCP extends Thread
 	{
 		parentHost = host;
 	}
+	public String getIP()
+	{
+		return socket.getInetAddress().getHostAddress();
+	}
+	public InetAddress getInetAddress()
+	{
+		return socket.getInetAddress();
+	}
 	
-	String readStream(InputStream in)
+	@Override
+	public void run()
+	{
+		System.out.println("Start thread " + this.getId());
+		initStreams();
+		sayHello();
+		
+		listenSocket();
+	
+		close();
+		System.out.println("Stop thread " + this.getId());
+	}
+	
+	private void initStreams()
+	{
+		try
+		{
+			out = new PrintStream(socket.getOutputStream());
+			in = socket.getInputStream();
+		}
+		catch(IOException ex)
+		{
+			Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
+			return;
+		}
+	}
+	
+	private void sayHello()
+	{
+		out.print((char)DataHandler.HELLO_MSG + DataHandler.name);
+		out.flush();
+	}
+	
+	private void listenSocket()
+	{
+		while(!socket.isClosed())
+		{
+			String command = readStream(in);
+			if(command.length() == 0)
+				break;
+			//System.out.println(command);
+			DataHandler.networkMessage((int)(command.charAt(0)), command, parentHost);
+		}
+	}
+	private String readStream(InputStream in)
 	{
 		int character = 0;
 		String result = "";
@@ -60,44 +116,9 @@ public class ClientTCP extends Thread
 		}
 		return result;
 	}
-	public String getIP()
-	{
-		return socket.getInetAddress().getHostAddress();
-	}
 	
-	public InetAddress getInetAddress()
+	private void close()
 	{
-		return socket.getInetAddress();
-	}
-	
-	@Override
-	public void run()
-	{
-		System.out.println("Start thread " + this.getId());
-		PrintStream out;
-		InputStream in;
-		try
-		{
-			out = new PrintStream(socket.getOutputStream());
-			in = socket.getInputStream();
-		}
-		catch(IOException ex)
-		{
-			Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
-			return;
-		}
-		
-		out.print((char)DataHandler.HELLO_MSG + DataHandler.name);
-		out.flush();
-		while(!socket.isClosed())
-		{
-			String command = readStream(in);
-			if(command.length() == 0)
-				break;
-			System.out.println(command);
-			DataHandler.networkMessage((int)(command.charAt(0)), command, parentHost);
-		}
-		
 		try
 		{
 			socket.close();
@@ -107,6 +128,5 @@ public class ClientTCP extends Thread
 			Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		DataHandler.networkEvent(DataHandler.HOST_DISCONNECT_EVENT, parentHost);
-		System.out.println("Stop thread " + this.getId());
 	}
 }

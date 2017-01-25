@@ -6,6 +6,7 @@
 package testserveur;
 
 import Server.ClientTCP;
+import java.net.InetAddress;
 import java.util.LinkedList;
 
 /**
@@ -24,7 +25,7 @@ public class DataHandler
 	static private LinkedList<Host> knownHostList = new LinkedList<Host>();
 	static private LinkedList<String> globalMessage = new LinkedList<String>();
 	
-	static public void networkMessage(int eventType, byte[] data, String ip)
+	static public void networkMessage(int eventType, byte[] data, Object ip)
 	{
 		networkMessage(eventType, new String(data).substring(1), ip);
 	}
@@ -38,7 +39,7 @@ public class DataHandler
 		{
 			case ANNOUCEMENT_MSG:
 				System.out.println("NetworkEvent: " + data);
-				receivedAnnoucementMessage(data, (String)host);
+				receivedAnnoucementMessage(data, (InetAddress)host);
 				break;
 			
 			case GLOBAL_MESSAGE_MSG:
@@ -48,6 +49,7 @@ public class DataHandler
 				break;
 		}
 	}
+	
 	static public void networkEvent(int eventType, Object data)
 	{
 		switch(eventType)
@@ -59,22 +61,32 @@ public class DataHandler
 	}
 	
 	
-	static private void receivedAnnoucementMessage(String data, String ip)
+	static private String getNewHostname(String name, byte[] ip)
 	{
+		int id = 0;
+		for(int i = 0; i < 4; ++i)
+			id += (Byte.toUnsignedInt(ip[i]) * (i + 1));
+		return name + id;
+	}
+	
+	
+	static private void receivedAnnoucementMessage(String data, InetAddress ip)
+	{
+		String str_ip = ip.getHostAddress();
 		for(Host host : knownHostList)
 		{
 			if(host.name.equals(data))
 			{
-				if(host.tcp.getIP().equals(ip))
+				if(host.tcp.getIP().equals(str_ip))
 				{
 					host.resetKeepalive();
 					return;
 				}
 				else
-					data = data + ip;
+					data = getNewHostname(data, ip.getAddress());
 			}
 		}
-		knownHostList.add(new Host(data, new ClientTCP(ip, 55056)));
+		knownHostList.add(new Host(data, new ClientTCP(str_ip, 55056)));
 	}
 	
 	static private void hostDisconnectEvent(Host host)
@@ -82,6 +94,4 @@ public class DataHandler
 		System.out.println("Remove : " + host.name);
 		knownHostList.remove(host);
 	}
-	
-	
 }

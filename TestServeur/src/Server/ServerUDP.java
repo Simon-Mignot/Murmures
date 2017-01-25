@@ -52,7 +52,7 @@ public class ServerUDP extends Thread
 				Logger.getLogger(ServerUDP.class.getName()).log(Level.SEVERE, null, ex);
 			}
 			System.out.println("UDP - " + new String(packet.getAddress().getHostAddress()) + ": " + new String(packet.getData()));
-			DataHandler.networkMessage(DataHandler.ANNOUCEMENT_MSG, data, packet.getAddress().getHostAddress());
+			DataHandler.networkMessage(DataHandler.ANNOUCEMENT_MSG, data, packet.getAddress());
 		}
 		
 	}
