@@ -87,14 +87,15 @@ public class ClientTCP extends Thread
 			return;
 		}
 		
-		out.print('\02' + "septimus");
+		out.print((char)DataHandler.HELLO_MSG + DataHandler.name);
 		out.flush();
 		while(!socket.isClosed())
 		{
 			String command = readStream(in);
-			System.out.println(command);
 			if(command.length() == 0)
 				break;
+			System.out.println(command);
+			DataHandler.networkMessage((int)(command.charAt(0)), command, parentHost);
 		}
 		
 		try

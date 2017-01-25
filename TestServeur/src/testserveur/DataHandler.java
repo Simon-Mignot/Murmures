@@ -15,30 +15,43 @@ import java.util.LinkedList;
 public class DataHandler
 {
 	static final public int ANNOUCEMENT_MSG = 0x01;
-	static final public int NEW_GLOBAL_MESSAGE = 0x02;
+	static final public int HELLO_MSG = 0x02;
+	static final public int GLOBAL_MESSAGE_MSG = 0x04;
 	
-	static final public int HOST_DISCONNECT_EVENT = 0x128;
+	static final public int HOST_DISCONNECT_EVENT = 0x01;
 	
-	static private LinkedList<Host> knownHostList = new LinkedList();
-	//static public ArrayList
+	static public String name = "septimus";
+	static private LinkedList<Host> knownHostList = new LinkedList<Host>();
+	static private LinkedList<String> globalMessage = new LinkedList<String>();
 	
-	static public void networkEvent(int eventType, byte[] data, String ip)
+	static public void networkMessage(int eventType, byte[] data, String ip)
 	{
-		networkEvent(eventType, new String(data).substring(1), ip);
+		networkMessage(eventType, new String(data).substring(1), ip);
 	}
-	static public void networkEvent(int eventType, Object data)
+	static public void networkMessage(int eventType, String data)
 	{
-		networkEvent(eventType, data, "");
+		networkMessage(eventType, data, "");
 	}
-	static private void networkEvent(int eventType, Object data, String ip)
+	static public void networkMessage(int eventType, String data, Object host)
 	{
 		switch(eventType)
 		{
 			case ANNOUCEMENT_MSG:
 				System.out.println("NetworkEvent: " + data);
-				receivedAnnoucementMessage((String)data, ip);
+				receivedAnnoucementMessage(data, (String)host);
 				break;
 			
+			case GLOBAL_MESSAGE_MSG:
+				globalMessage.add(((Host)host).name + " : " + data);
+				for(String s : globalMessage)
+					System.out.println(s + '\n');
+				break;
+		}
+	}
+	static public void networkEvent(int eventType, Object data)
+	{
+		switch(eventType)
+		{
 			case HOST_DISCONNECT_EVENT:
 				hostDisconnectEvent((Host)data);
 				break;

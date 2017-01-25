@@ -1,8 +1,13 @@
 
 message ended by <LF> sender-side
 
+" Network Message
 'annoucement-msg'    ANNOUNCEMENT:UDP     broadcast    ->    <0x01>[:pseudo]<LF>
 'hello-msg'          HELLO:TCP            * > 1        ->    <0x02>[:pseudo]<LF>
+
+" Network Event
+'host-disconnect-event' HOST_DISCONNECT_EVENT   0x01
+
 
 GLOBAL_MESSAGE:TCP      ->     <0x08>[:message]<LF>
 PRIVATE_MESSAGE:TCP     ->     <0x16>[:User]<0x00>[:message]<LF>
