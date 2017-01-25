@@ -1,24 +1,24 @@
 
 message ended by <LF> sender-side
 
-'annoucement-msg'	ANNOUNCEMENT:UDP 	broadcast	->	<0x01>[:pseudo]<LF>
-'hello-msg'			HELLO:TCP 			* > 1		->	<0x02>[:pseudo]<LF>
+'annoucement-msg'    ANNOUNCEMENT:UDP     broadcast    ->    <0x01>[:pseudo]<LF>
+'hello-msg'          HELLO:TCP            * > 1        ->    <0x02>[:pseudo]<LF>
 
-GLOBAL_MESSAGE:TCP	-> 	<0x08>[:message]<LF>
-PRIVATE_MESSAGE:TCP	->	<0x16>[:User]<0x00>[:message]<LF>
-GROUP_MESSAGE:TCP	->	<0x32>[:Group]<0x00>[:message]<LF>
+GLOBAL_MESSAGE:TCP      ->     <0x08>[:message]<LF>
+PRIVATE_MESSAGE:TCP     ->     <0x16>[:User]<0x00>[:message]<LF>
+GROUP_MESSAGE:TCP       ->     <0x32>[:Group]<0x00>[:message]<LF>
 
-User		-> 	[:pseudo]<0x01>[:ip_address]
-Group		->	[:name]
-GroupUsers	->	[:name]<0x03>{[:User]<0x03>}
+User        ->    [:pseudo]<0x01>[:ip_address]
+Group       ->    [:name]
+GroupUsers  ->    [:name]<0x03>{[:User]<0x03>}
 
 
 
 Host send 'annoucement-msg' when :
 - connection
 - every 1 minute
-	\> if Receiver does not know Sender
-		\> add him to the list
-		\> connect a tcp socket to the Sender
-		\> send 'hello-msg' to the Sender
-		\> if no 'annoucement-msg' for 5 minutes, remove the host from the list
+    \> if Receiver does not know Sender
+        \> add him to the list
+        \> connect a tcp socket to the Sender
+        \> send 'hello-msg' to the Sender
+        \> if no 'annoucement-msg' for 5 minutes, remove the host from the list
