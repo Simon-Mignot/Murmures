@@ -5,6 +5,7 @@
  */
 package testserveur;
 
+import Server.ClientTCP;
 import java.net.InetAddress;
 import java.util.Date;
 import java.util.Objects;
@@ -13,22 +14,29 @@ import java.util.Objects;
  *
  * @author Simon
  */
-class Client
+public class Host
 {
-	public Client()
+	public String name;
+	public ClientTCP tcp;
+	public Date lastKeepalive;
+	
+	public Host()
 	{
 
 	}
-	public Client(String _name, InetAddress _ip)
+	public Host(String _name, ClientTCP _tcp)
 	{
+		System.out.println("new host : " + _name);
 		name = _name;
-		ip = _ip;
+		tcp = _tcp;
+		tcp.setHost(this);
+		tcp.start();
 		lastKeepalive = new Date();
 	}
 	
 	public void resetKeepalive()
 	{
-		System.out.println((new Date().getTime() - lastKeepalive.getTime())/1000.);
+		System.out.println(name + " : " + (new Date().getTime() - lastKeepalive.getTime())/1000.);
 		lastKeepalive = new Date();
 	}
 	
@@ -38,31 +46,21 @@ class Client
 		int firstPartLength = firstPart.length();
 		byte[] out = new byte[firstPartLength + 4];
 		System.arraycopy(firstPart.getBytes(), 0, out, 0, firstPartLength);
-		System.arraycopy(ip.getAddress(), 0, out, firstPartLength, 4);
+		System.arraycopy(tcp.getInetAddress().getAddress(), 0, out, firstPartLength, 4);
 		return out;
 	}
 	
 	@Override
 	public String toString()
 	{
-		return (name + '\n' + ip.getHostAddress());
+		return (name + '\n' + tcp.getIP());
 	}
 	@Override
 	public boolean equals(Object o)
 	{
-		if(o != null && o instanceof Client)
-			return (name.equals(((Client)o).name) && ip.equals(((Client)o).ip));
+		if(o != null && o instanceof Host)
+			return (name.equals(((Host)o).name)
+				 && tcp.getIP().equals(((Host)o).tcp.getIP()));
 		return false;
 	}
-
-	@Override
-	public int hashCode() {
-		int hash = 5;
-		hash = 43 * hash + Objects.hashCode(this.name);
-		hash = 43 * hash + Objects.hashCode(this.ip);
-		return hash;
-	}
-	public String name;
-	public InetAddress ip;
-	public Date lastKeepalive;
 }

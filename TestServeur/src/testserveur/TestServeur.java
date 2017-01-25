@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class TestServeur
 {
-	static private HashMap<String, Client> clients;
+	static private HashMap<String, Host> clients;
 	static private final int NETWORK_PORT = 65500;
 	static private final int LOGIN           = 0x01; // 0000 0001
 	static private final int KEEP_ALIVE      = 0x02; // 0000 0010
@@ -35,15 +35,15 @@ public class TestServeur
 	static private final int PRIVATE_MESSAGE = 0x16; // 0001 0000
 	static private final int GROUP_MESSAGE   = 0x32; // 0010 0000
 	
-	public static void addClient(Client client)
+	public static void addClient(Host client)
 	{
 		if(!clients.containsKey(client))
 			clients.put(client.name, client);
 		Iterator it = clients.entrySet().iterator();
 		while(it.hasNext())
 		{
-			Client c = (Client)(((Entry)(it.next())).getValue());
-			System.out.println("Client " + c.ip + " : " + c.name);
+			Host c = (Host)(((Entry)(it.next())).getValue());
+			System.out.println("Client " + c.tcp + " : " + c.name);
 		}
 	}
 	
@@ -54,7 +54,7 @@ public class TestServeur
 		Iterator it = clients.entrySet().iterator();
 		while(it.hasNext())
 		{
-			Client c = (Client)(((Entry)(it.next())).getValue());
+			Host c = (Host)(((Entry)(it.next())).getValue());
 			byte[] bytesArray = c.toBytesArray();
 			for(byte b : bytesArray)
 				data.add(b);
@@ -89,10 +89,10 @@ public class TestServeur
 		byte[] data = new byte[message.length() + 1];
 		System.arraycopy(message, 0, data, 1, message.length());
 		data[0] = GLOBAL_MESSAGE;
-		send(message.getBytes(), new Client());
+		send(message.getBytes(), new Host());
 	}
 	
-	private static void sendMessage(String message, Client client)
+	private static void sendMessage(String message, Host client)
 	{
 		byte[] data = new byte[message.length() + 1];
 		System.arraycopy(message, 0, data, 1, message.length());
@@ -100,9 +100,9 @@ public class TestServeur
 		send(message.getBytes(), client);
 	}
 	
-	private static void send(byte[] data, Client client)
+	private static void send(byte[] data, Host client)
 	{
-		InetAddress IPAddress = client.ip;
+		InetAddress IPAddress = client.tcp.getInetAddress();
 		int port = NETWORK_PORT;
 		DatagramPacket sendPacket = new DatagramPacket(data, data.length, IPAddress, port);
 		
@@ -124,7 +124,7 @@ public class TestServeur
 	
 	public static void handleDatagram(DatagramPacket packet)
 	{
-		byte[] data = packet.getData();
+		/*byte[] data = packet.getData();
 		System.out.println((int)data[0]);
 		switch(data[0])
 		{
@@ -146,7 +146,7 @@ public class TestServeur
 				msg = msg.substring(1);
 				DataHandler.networkEvent(DataHandler.NEW_GLOBAL_MESSAGE, msg);
 				break;
-		}
+		}*/
 	}
 	
 	/**

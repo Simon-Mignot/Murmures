@@ -35,7 +35,7 @@ public class ServerUDP extends Thread
 	}
 	
 	@Override
-	public void start()
+	public void run()
 	{
 		while(true)
 		{
@@ -43,14 +43,16 @@ public class ServerUDP extends Thread
 			DatagramPacket packet = new DatagramPacket(data, DATA_SIZE);
 			try
 			{
+				System.out.println("listen UDP");
 				listener.receive(packet);
+				System.out.println("received UDP");
 			}
 			catch(IOException ex)
 			{
 				Logger.getLogger(ServerUDP.class.getName()).log(Level.SEVERE, null, ex);
 			}
 			System.out.println("UDP - " + new String(packet.getAddress().getHostAddress()) + ": " + new String(packet.getData()));
-			DataHandler.networkEvent(DataHandler.NEW_CLIENT, data);
+			DataHandler.networkEvent(DataHandler.ANNOUCEMENT_MSG, data, packet.getAddress().getHostAddress());
 		}
 		
 	}
