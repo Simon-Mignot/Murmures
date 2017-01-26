@@ -23,7 +23,7 @@ public class DataHandler
 	
 	static public String name = "septimus";
 	static private LinkedList<Host> knownHostList = new LinkedList<Host>();
-	static private LinkedList<String> globalMessage = new LinkedList<String>();
+	static private LinkedList<Message> globalMessage = new LinkedList<Message>();
 	
 	static public void networkMessage(int eventType, byte[] data, Object ip)
 	{
@@ -43,9 +43,9 @@ public class DataHandler
 				break;
 			
 			case GLOBAL_MESSAGE_MSG:
-				globalMessage.add(((Host)host).name + " : " + data);
-				for(String s : globalMessage)
-					System.out.println(s + '\n');
+				globalMessage.add(new Message((Host)host, data));
+				for(Message m : globalMessage)
+					System.out.println((m.host.name == name ? ">" : "<") + m.toString() + '\n');
 				break;
 		}
 	}
