@@ -75,13 +75,12 @@ public class ClientTCP extends Thread
 		catch(IOException ex)
 		{
 			Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
-			return;
 		}
 	}
 	
 	private void sayHello()
 	{
-		out.print((char)DataHandler.HELLO_MSG + DataHandler.name);
+		out.print((char)DataHandler.HELLO_MSG + DataHandler.localhost.name);
 		out.flush();
 	}
 	

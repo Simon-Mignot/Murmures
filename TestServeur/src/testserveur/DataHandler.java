@@ -21,10 +21,15 @@ public class DataHandler
 	
 	static final public int HOST_DISCONNECT_EVENT = 0x01;
 	
-	static public String name = "septimus";
+	static public Host localhost = new Host("septimus");
 	static private LinkedList<Host> knownHostList = new LinkedList<Host>();
 	static private LinkedList<Message> globalMessage = new LinkedList<Message>();
 	
+	static public void init()
+	{
+		System.out.println("init();");
+		knownHostList.add(localhost);
+	}
 	static public void networkMessage(int eventType, byte[] data, Object ip)
 	{
 		networkMessage(eventType, new String(data).substring(1), ip);
@@ -45,7 +50,7 @@ public class DataHandler
 			case GLOBAL_MESSAGE_MSG:
 				globalMessage.add(new Message((Host)host, data));
 				for(Message m : globalMessage)
-					System.out.println((m.host.name == name ? ">" : "<") + m.toString() + '\n');
+					System.out.println((m.host.name == localhost.name ? ">" : "<") + m.toString() + '\n');
 				break;
 		}
 	}
@@ -66,7 +71,9 @@ public class DataHandler
 		int id = 0;
 		for(int i = 0; i < 4; ++i)
 			id += (Byte.toUnsignedInt(ip[i]) * (i + 1));
-		return name + id;
+		for(char c : name.toCharArray())
+			id += (int)c;
+		return name + '-' + String.format("%08X", id);
 	}
 	
 	
@@ -75,7 +82,9 @@ public class DataHandler
 		String str_ip = ip.getHostAddress();
 		for(Host host : knownHostList)
 		{
-			if(host.name.equals(data))
+			if(host == localhost)
+				data = getNewHostname(data, ip.getAddress());
+			else if(host.name.equals(data))
 			{
 				if(host.tcp.getIP().equals(str_ip))
 				{

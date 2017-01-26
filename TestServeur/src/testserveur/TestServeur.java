@@ -154,6 +154,7 @@ public class TestServeur
 	 */
 	public static void main(String[] args) throws SocketException, IOException
 	{
+		DataHandler.init();
 		Server server = new Server();
 	}
 }

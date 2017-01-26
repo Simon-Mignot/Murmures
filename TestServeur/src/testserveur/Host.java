@@ -22,7 +22,12 @@ public class Host
 	
 	public Host()
 	{
-
+		
+	}
+	public Host(String name)
+	{
+		this.name = name;
+		tcp = null;
 	}
 	public Host(String _name, ClientTCP _tcp)
 	{
@@ -32,6 +37,10 @@ public class Host
 		tcp.setHost(this);
 		tcp.start();
 		lastKeepalive = new Date();
+	}
+	public boolean isLocalhost()
+	{
+		return tcp == null;
 	}
 	
 	public void resetKeepalive()
