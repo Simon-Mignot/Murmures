@@ -17,10 +17,14 @@ import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
 public class BroadcastUDP extends Thread
 {
     private int interval = 2000;
+    private int port;
     private DatagramPacket udp;
-    public BroadcastUDP(int _interval)
+    private DatagramSocket socket;
+
+    public BroadcastUDP(int _port, int _interval)
     {
         interval = _interval;
+        port = _port;
         udp = initPacket();
     }
     @Override
@@ -48,18 +52,22 @@ public class BroadcastUDP extends Thread
         {
             String msg = DataHandler.ANNOUCEMENT_MSG + DataHandler.localhost.name;
             byte[] data = msg.getBytes();
-            return new DatagramPacket(data, data.length, InetAddress.getByName("255.255.255.255"), 65500);
+            socket = new DatagramSocket();
+            return new DatagramPacket(data, data.length, InetAddress.getByName("255.255.255.255"), port);
         }
         catch(UnknownHostException e)
         {
             System.out.println("init " + e.getMessage());
+        }
+        catch (SocketException e)
+        {
+            e.printStackTrace();
         }
         return null;
     }
 
     private void sendBroadcast() throws IOException
     {
-        DatagramSocket d = new DatagramSocket(65501);
-        d.send(udp);
+        socket.send(udp);
     }
 }

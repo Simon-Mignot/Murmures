@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -57,7 +58,7 @@ public class HomeActivity extends AppCompatActivity
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 0);
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
         Log.d("Permission check", permissionCheck != 0 ? "true" : "false");
-        Log.d("permision internet",Manifest.permission.INTERNET);
+        Log.d("permission internet",Manifest.permission.INTERNET);
 
         setContentView(R.layout.activity_home);
         Intent intent = getIntent();
@@ -141,8 +142,31 @@ public class HomeActivity extends AppCompatActivity
 
                 rootView = inflater.inflate(R.layout.activity_chatall, container, false);
                 final ListView list = (ListView) rootView.findViewById(R.id.textchatall);
-                ArrayAdapter ad = new ArrayAdapter(this.getContext(),
-                        android.R.layout.simple_list_item_1, DataHandler.globalMessage);
+
+                /*this.getContext(),
+                        android.R.layout.simple_list_item_1, DataHandler.globalMessage*/
+
+                BaseAdapter ad = new BaseAdapter() {
+                    @Override
+                    public int getCount() {
+                        return DataHandler.globalMessage.size();
+                    }
+
+                    @Override
+                    public Object getItem(int position) {
+                        return DataHandler.globalMessage.get(position);
+                    }
+
+                    @Override
+                    public long getItemId(int position) {
+                        return 0;
+                    }
+
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        return null;
+                    }
+                };
                 list.setAdapter(ad);
                 list.post(new Runnable()
                 {
@@ -153,6 +177,8 @@ public class HomeActivity extends AppCompatActivity
                         Log.d("nbmessage", "post");
                     }
                 });
+
+                DataHandler.setList(list);
 
                 final View sendView = rootView;
                 final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);

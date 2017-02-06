@@ -13,12 +13,15 @@ import java.util.Enumeration;
 public class Server
 {
 	static public ArrayList<String> localAddresses;
+	final static public int TCP_PORT = 65501;
+	final static public int UDP_PORT = 65500;
+	final static public int ANNOUCEMENT_INTERVAL = 10000;
 	public Server()
 	{
 		initLocalAddresses();
-		ServerTCP serverTCP = new ServerTCP(65501);
-		ServerUDP serverUDP = new ServerUDP(65500);
-		BroadcastUDP broadcastUDP = new BroadcastUDP(2000);
+		ServerTCP serverTCP = new ServerTCP(TCP_PORT);
+		ServerUDP serverUDP = new ServerUDP(UDP_PORT);
+		BroadcastUDP broadcastUDP = new BroadcastUDP(UDP_PORT, ANNOUCEMENT_INTERVAL);
 		broadcastUDP.start();
 		serverUDP.start();
 		serverTCP.start();

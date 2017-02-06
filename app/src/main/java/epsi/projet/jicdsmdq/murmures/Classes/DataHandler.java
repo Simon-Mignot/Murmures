@@ -5,6 +5,9 @@
  */
 package epsi.projet.jicdsmdq.murmures.Classes;
 
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+
 import java.net.InetAddress;
 import java.util.LinkedList;
 
@@ -25,7 +28,14 @@ public class DataHandler
 	static public Host localhost;
 	static private LinkedList<Host> knownHostList = new LinkedList<Host>();
 	static public LinkedList<Message> globalMessage = new LinkedList<Message>();
-	
+	static public ListView list;
+
+
+	static public void setList(ListView _list)
+	{
+		list = _list;
+	}
+
 	static public void init(Host _localhost)
 	{
 		localhost = _localhost;
@@ -46,11 +56,12 @@ public class DataHandler
 			case ANNOUCEMENT_MSG:
 				System.out.println("NetworkEvent: " + data);
 				receivedAnnoucementMessage(data, (InetAddress)host);
-				globalMessage.add(new Message(localhost, "NetworkEvent" + data));
+				globalMessage.add(new Message(localhost, "NetworkEvent " + data));
 				break;
 			
 			case GLOBAL_MESSAGE_MSG:
 				globalMessage.add(new Message((Host)host, data));
+				((BaseAdapter)(list.getAdapter())).notifyDataSetChanged();
 				for(Message m : globalMessage)
 					System.out.println((m.host.name == localhost.name ? ">" : "<") + m.toString() + '\n');
 				break;
@@ -109,7 +120,7 @@ public class DataHandler
 					data = getNewHostname(data, ip.getAddress());
 			}
 		}
-		knownHostList.add(new Host(data, new ClientTCP(str_ip, 55056)));
+		knownHostList.add(new Host(data, new ClientTCP(str_ip)));
 	}
 	
 	static private void hostDisconnectEvent(Host host)

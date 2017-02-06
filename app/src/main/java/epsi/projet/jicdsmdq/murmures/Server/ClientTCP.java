@@ -29,11 +29,11 @@ public class ClientTCP extends Thread
 	private PrintStream out;
 	private InputStream in;
 	
-	public ClientTCP(String ip, int port)
+	public ClientTCP(String ip)
 	{
 		try
 		{
-			socket = new Socket(ip, port);
+			socket = new Socket(ip, Server.TCP_PORT);
 		}
 		catch(IOException ex)
 		{
