@@ -18,7 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
 import epsi.projet.jicdsmdq.murmures.R;
+import epsi.projet.jicdsmdq.murmures.Server.Server;
 
 public class LoginActivity extends AppCompatActivity
 {
@@ -30,9 +32,6 @@ public class LoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-		
-		DataHandler.init();
-		Server server = new Server();
 		
         setContentView(R.layout.acivity_login);
         setTitle(getString(R.string.login_label_menu));

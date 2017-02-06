@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server;
+package epsi.projet.jicdsmdq.murmures.Server;
+
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -11,7 +13,8 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import testserveur.DataHandler;
+
+import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
 
 /**
  *
@@ -30,10 +33,12 @@ public class ServerUDP extends Thread
 		}
 		catch(SocketException ex)
 		{
+			Log.d("ServerTCP", port + "");
 			Logger.getLogger(ServerUDP.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
+
+
 	@Override
 	public void run()
 	{

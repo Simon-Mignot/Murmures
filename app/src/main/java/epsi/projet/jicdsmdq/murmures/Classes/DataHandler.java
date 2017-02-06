@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package epsi.projet.jicdsmdq.murmures.Classes;
 
-import Server.ClientTCP;
 import java.net.InetAddress;
 import java.util.LinkedList;
+
+import epsi.projet.jicdsmdq.murmures.Server.ClientTCP;
 
 /**
  *
@@ -20,14 +21,14 @@ public class DataHandler
 	static final public int GLOBAL_MESSAGE_MSG = 0x04;
 	
 	static final public int HOST_DISCONNECT_EVENT = 0x01;
-	
-	static public Host localhost = new Host("septimus");
+
+	static public Host localhost;
 	static private LinkedList<Host> knownHostList = new LinkedList<Host>();
-	static private LinkedList<Message> globalMessage = new LinkedList<Message>();
+	static public LinkedList<Message> globalMessage = new LinkedList<Message>();
 	
-	static public void init()
+	static public void init(Host _localhost)
 	{
-		System.out.println("init();");
+		localhost = _localhost;
 		knownHostList.add(localhost);
 	}
 	static public void networkMessage(int eventType, byte[] data, Object ip)
@@ -45,6 +46,7 @@ public class DataHandler
 			case ANNOUCEMENT_MSG:
 				System.out.println("NetworkEvent: " + data);
 				receivedAnnoucementMessage(data, (InetAddress)host);
+				globalMessage.add(new Message(localhost, "NetworkEvent" + data));
 				break;
 			
 			case GLOBAL_MESSAGE_MSG:
@@ -53,6 +55,18 @@ public class DataHandler
 					System.out.println((m.host.name == localhost.name ? ">" : "<") + m.toString() + '\n');
 				break;
 		}
+	}
+
+	static public void networkSend(Message message)
+	{
+		//if(message.host == localhost)
+		globalMessage.add(message);
+		for(Host host : knownHostList)
+		{
+			if(host.tcp != null)
+				host.tcp.sendMessage(message);
+		}
+
 	}
 	
 	static public void networkEvent(int eventType, Object data)
@@ -70,7 +84,7 @@ public class DataHandler
 	{
 		int id = 0;
 		for(int i = 0; i < 4; ++i)
-			id += (Byte.toUnsignedInt(ip[i]) * (i + 1));
+			id += (/*Byte.toUnsignedInt*/(ip[i]) * (i + 1));
 		for(char c : name.toCharArray())
 			id += (int)c;
 		return name + '-' + String.format("%08X", id);

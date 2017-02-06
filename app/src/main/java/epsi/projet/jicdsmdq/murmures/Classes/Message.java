@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package epsi.projet.jicdsmdq.murmures.Classes;
 
 import java.util.Date;
 
@@ -26,7 +26,7 @@ public class Message
 	
 	public String toString()
 	{
-		return host.name + '(' + date.toString() + ") : " + message;
+		return host.name + ":\n" + message;
 	}
 	
     public String getMessage()

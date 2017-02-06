@@ -1,4 +1,4 @@
-package Server;
+package epsi.projet.jicdsmdq.murmures.Server;
 
 /**
  *

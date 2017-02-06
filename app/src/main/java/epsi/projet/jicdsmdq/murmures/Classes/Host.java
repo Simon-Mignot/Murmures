@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Classes;
+package epsi.projet.jicdsmdq.murmures.Classes;
 
-import Server.ClientTCP;
 import java.net.InetAddress;
 import java.util.Date;
 import java.util.Objects;
+
+import epsi.projet.jicdsmdq.murmures.Server.ClientTCP;
 
 /**
  *
@@ -19,11 +20,7 @@ public class Host
 	public String name;
 	public ClientTCP tcp;
 	public Date lastKeepalive;
-	
-	public Host()
-	{
-		
-	}
+
 	public Host(String name)
 	{
 		this.name = name;

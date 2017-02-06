@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server;
+package epsi.projet.jicdsmdq.murmures.Server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +12,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import testserveur.DataHandler;
-import testserveur.Host;
+
+import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
+import epsi.projet.jicdsmdq.murmures.Classes.Host;
+import epsi.projet.jicdsmdq.murmures.Classes.Message;
 
 /**
  *
@@ -76,6 +78,12 @@ public class ClientTCP extends Thread
 		{
 			Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+
+	public void sendMessage(Message msg)
+	{
+		out.print((char)DataHandler.GLOBAL_MESSAGE_MSG + msg.toString());
+		out.flush();
 	}
 	
 	private void sayHello()

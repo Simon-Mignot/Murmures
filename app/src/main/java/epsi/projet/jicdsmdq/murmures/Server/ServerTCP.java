@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Server;
+package epsi.projet.jicdsmdq.murmures.Server;
+
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -25,6 +27,7 @@ public class ServerTCP extends Thread
 		}
 		catch(IOException ex)
 		{
+			Log.d("ServerTCP", port + "");
 			Logger.getLogger(ServerTCP.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}

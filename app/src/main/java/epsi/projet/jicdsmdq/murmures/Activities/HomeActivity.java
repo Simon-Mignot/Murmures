@@ -1,8 +1,11 @@
 package epsi.projet.jicdsmdq.murmures.Activities;
 
+import android.Manifest;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -28,26 +31,42 @@ import android.widget.TextView;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
 import epsi.projet.jicdsmdq.murmures.Classes.Group;
 import epsi.projet.jicdsmdq.murmures.Classes.GroupeList;
 import epsi.projet.jicdsmdq.murmures.Classes.Message;
+import epsi.projet.jicdsmdq.murmures.Classes.Host;
 import epsi.projet.jicdsmdq.murmures.Classes.UserList;
 import epsi.projet.jicdsmdq.murmures.Classes.User;
 import epsi.projet.jicdsmdq.murmures.R;
+import epsi.projet.jicdsmdq.murmures.Server.Server;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity
+{
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 0);
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
+        Log.d("Permission check", permissionCheck != 0 ? "true" : "false");
+        Log.d("permision internet",Manifest.permission.INTERNET);
+
         setContentView(R.layout.activity_home);
         Intent intent = getIntent();
         String pseudo = intent.getStringExtra("pseudo");
         intent = new Intent(this, SectionsPagerAdapter.class);
         intent.putExtra("pseudo", pseudo);
+
+        DataHandler.init(new Host(pseudo));
+        Server server = new Server();
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -63,7 +82,8 @@ public class HomeActivity extends AppCompatActivity {
 
     // Permet de creer le menu
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -71,8 +91,10 @@ public class HomeActivity extends AppCompatActivity {
 
     // Permet de creer les boutons du menu avec leurs differentes actions
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
             case R.id.action_settings:
                 return true;
 
@@ -84,13 +106,16 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends Fragment
+    {
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        public PlaceholderFragment() {
+        public PlaceholderFragment()
+        {
         }
 
-        public static PlaceholderFragment newInstance(int sectionNumber, String pseudo) {
+        public static PlaceholderFragment newInstance(int sectionNumber, String pseudo)
+        {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -102,50 +127,58 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+                                 Bundle savedInstanceState)
+        {
 
             View rootView = null;
             final String pseudo = getArguments().getString("pseudo");
-            UserList userList = UserList.getInstance();
-            GroupeList groupeList = GroupeList.getInstance();
+           // GroupeList groupeList = GroupeList.getInstance();
 
-            if(getArguments().getInt(ARG_SECTION_NUMBER)==1){
-                 final Group general = new Group("General");
-                 groupeList.addGroup(general);
-                 rootView = inflater.inflate(R.layout.activity_chatall, container, false);
+            if (getArguments().getInt(ARG_SECTION_NUMBER) == 1)
+            {
+                //final Group general = new Group("General");
+                //groupeList.addGroup(general);
+
+                rootView = inflater.inflate(R.layout.activity_chatall, container, false);
                 final ListView list = (ListView) rootView.findViewById(R.id.textchatall);
-                 ArrayAdapter ad = new ArrayAdapter(this.getContext(),
-                        android.R.layout.simple_list_item_1, general.getChannel());
-                 list.setAdapter(ad);
-                 list.post(new Runnable() {
+                ArrayAdapter ad = new ArrayAdapter(this.getContext(),
+                        android.R.layout.simple_list_item_1, DataHandler.globalMessage);
+                list.setAdapter(ad);
+                list.post(new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         // Select the last row so it will scroll into view...
-                        Log.d("nbmessage","post");
+                        Log.d("nbmessage", "post");
                     }
                 });
 
-                 final View sendView=rootView;
-                 final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);
-                 sendbutton.setOnClickListener(new View.OnClickListener() {
+                final View sendView = rootView;
+                final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);
+                sendbutton.setOnClickListener(new View.OnClickListener()
+                {
 
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View v)
+                    {
                         EditText message = (EditText) sendView.findViewById(R.id.messageText);
-                       if(!(message.getText().toString().matches(""))) {
-                        general.addMessage(new Message(new User(pseudo),message.getText().toString()));
-                        message.setText("");
-                           list.setSelection(list.getAdapter().getCount() - 1);
+                        if (message.getText().toString().length() > 0)
+                        {
+                            DataHandler.networkSend(new Message(DataHandler.localhost, message.getText().toString()));
+                            message.setText("");
+                            list.setSelection(list.getAdapter().getCount() - 1);
 
-                       }
-                }});
+                        }
+                    }
+                });
 
 
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==2){
+            } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 2)
+            {
                 rootView = inflater.inflate(R.layout.activity_chatgroup, container, false);
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==3){
+            } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 3)
+            {
                 rootView = inflater.inflate(R.layout.activity_chat1to1, container, false);
             }
 
@@ -162,8 +195,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-
-    public void refresh(){
+    public void refresh()
+    {
 
     }
 
@@ -171,31 +204,38 @@ public class HomeActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter
+    {
 
         private String pseudo;
-        public SectionsPagerAdapter(FragmentManager fm) {
+
+        public SectionsPagerAdapter(FragmentManager fm)
+        {
             super(fm);
             Intent intent = getIntent();
             pseudo = intent.getStringExtra("pseudo");
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(int position)
+        {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position + 1, pseudo);
         }
 
         @Override
-        public int getCount() {
+        public int getCount()
+        {
             // Show 3 total pages.
             return 3;
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
+        public CharSequence getPageTitle(int position)
+        {
+            switch (position)
+            {
                 case 0:
                     return "All";
                 case 1:
