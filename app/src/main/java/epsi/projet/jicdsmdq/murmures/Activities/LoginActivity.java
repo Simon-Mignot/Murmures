@@ -30,6 +30,10 @@ public class LoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+		
+		DataHandler.init();
+		Server server = new Server();
+		
         setContentView(R.layout.acivity_login);
         setTitle(getString(R.string.login_label_menu));
 

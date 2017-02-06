@@ -1,41 +1,41 @@
-package epsi.projet.jicdsmdq.murmures.Classes;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Classes;
 
 import java.util.Date;
 
 /**
- * Created by Simon on 14/11/2016.
+ *
+ * @author Simon
  */
 public class Message
 {
-    String message;
+	String message;
     Date date;
-    User user;
-
-    public Message(User user, String text)
-    {
-        message = text;
-        this.user = user;
-    }
-
-    public String getMessage() {
+	public Host host;
+	
+	public Message(Host host, String message)
+	{
+		this.host = host;
+		this.message = message;
+		date = new Date();
+	}
+	
+	public String toString()
+	{
+		return host.name + '(' + date.toString() + ") : " + message;
+	}
+	
+    public String getMessage()
+	{
         return message;
     }
 
-    public void setText(String text) {
-        this.message = text;
-    }
-
-    public Date getDate() {
+    public Date getDate()
+	{
         return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    @Override
-    public String toString()
-    {
-        return user.getPseudo()+ ":" + getMessage();
     }
 }
