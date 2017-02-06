@@ -11,3 +11,8 @@ TestServeur/manifest.mf
 TestServeur/build/
 TestServeur/nbproject/
 TestServeur/build.xml
+gradle/wrapper/gradle-wrapper.properties
+.idea/gradle.xml
+.idea/vcs.xml
+build.gradle
+.idea/gradle.xml

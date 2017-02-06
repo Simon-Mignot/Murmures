@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/textchatall"
+        android:layout_weight="0.99" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:elevation="5dp">
+
+        <EditText
+            android:id="@+id/messageText"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="15dp"
+            android:textColor="@color/colorPrimaryText"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionNone"
+            android:hint="Message"
+            android:layout_alignParentStart="true"
+            android:layout_alignBottom="@+id/buttonSend"
+            android:layout_alignTop="@+id/buttonSend" />
+
+        <ImageButton
+            android:id="@+id/buttonSend"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_send_white_48dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="12dp" />
+    </RelativeLayout>
+
+</LinearLayout>

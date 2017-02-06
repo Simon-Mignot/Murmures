@@ -1,8 +1,10 @@
 package epsi.projet.jicdsmdq.murmures.Activities;
 
+import android.app.Activity;
+
 /**
  * Created by Simon on 14/11/2016.
  */
-public class SettingsActivity
+public class SettingsActivity extends Activity
 {
 }

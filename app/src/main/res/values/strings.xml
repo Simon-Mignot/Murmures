@@ -1,6 +1,18 @@
 <resources>
+    <!-- APPLICATION -->
     <string name="app_name">Murmures</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <!-- MENU -->
+    <string name="menu_action_settings">Options</string>
+    <string name="menu_action_notification">Notifications</string>
+
+    <!-- LOGIN -->
+    <string name="login_text_pseudo">Pseudo</string>
+    <string name="login_text_connexion">Se Connecter</string>
+    <string name="login_label_menu">Login</string>
+
+    <!-- HOME -->
+
+    <!-- ERREUR -->
+    <string name="err_msg_pseudo">Votre Pseudo n\'est pas correct</string>
 </resources>

@@ -107,5 +107,10 @@ public class Network
         {
             Log.e("TEST", "Exception : " + e.getMessage());
         }
+    public void send(Message message,Group group){
+
+    }
+    public void send(Message message, User user){
+
     }
 }
