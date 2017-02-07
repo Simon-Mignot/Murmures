@@ -8,6 +8,7 @@ package epsi.projet.jicdsmdq.murmures.Classes;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.LinkedList;
 
@@ -26,7 +27,7 @@ public class DataHandler
 	static final public int HOST_DISCONNECT_EVENT = 0x01;
 
 	static public Host localhost;
-	static private LinkedList<Host> knownHostList = new LinkedList<Host>();
+	static public LinkedList<Host> knownHostList = new LinkedList<Host>();
 	static public LinkedList<Message> globalMessage = new LinkedList<Message>();
 	static public ListView list;
 
@@ -54,14 +55,18 @@ public class DataHandler
 		switch(eventType)
 		{
 			case ANNOUCEMENT_MSG:
-				System.out.println("NetworkEvent: " + data);
+				//System.out.println("Annoucement from: " + data);
 				receivedAnnoucementMessage(data, (InetAddress)host);
 				globalMessage.add(new Message(localhost, "NetworkEvent " + data));
+				break;
+
+			case HELLO_MSG:
+				((Host)host).name = data;
 				break;
 			
 			case GLOBAL_MESSAGE_MSG:
 				globalMessage.add(new Message((Host)host, data));
-				((BaseAdapter)(list.getAdapter())).notifyDataSetChanged();
+				//((BaseAdapter)(list.getAdapter())).notifyDataSetChanged();
 				for(Message m : globalMessage)
 					System.out.println((m.host.name == localhost.name ? ">" : "<") + m.toString() + '\n');
 				break;
@@ -108,7 +113,8 @@ public class DataHandler
 		for(Host host : knownHostList)
 		{
 			if(host == localhost)
-				data = getNewHostname(data, ip.getAddress());
+				continue;
+				//data = getNewHostname(data, ip.getAddress());
 			else if(host.name.equals(data))
 			{
 				if(host.tcp.getIP().equals(str_ip))
@@ -120,7 +126,14 @@ public class DataHandler
 					data = getNewHostname(data, ip.getAddress());
 			}
 		}
-		knownHostList.add(new Host(data, new ClientTCP(str_ip)));
+
+		try
+		{
+			knownHostList.add(new Host(data, new ClientTCP(str_ip)));
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	static private void hostDisconnectEvent(Host host)

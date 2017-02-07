@@ -5,11 +5,14 @@
  */
 package epsi.projet.jicdsmdq.murmures.Server;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,16 +32,17 @@ public class ClientTCP extends Thread
 	private PrintStream out;
 	private InputStream in;
 	
-	public ClientTCP(String ip)
+	public ClientTCP(String ip) throws IOException
 	{
-		try
-		{
-			socket = new Socket(ip, Server.TCP_PORT);
-		}
-		catch(IOException ex)
-		{
-			Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		socket = new Socket(ip, Server.TCP_PORT);
+		socket.setSoTimeout(0);
+		if (socket == null)
+			System.out.println("socket null");
+	}
+
+	public ClientTCP(Socket socket)
+	{
+		this.socket = socket;
 	}
 	
 	public void setHost(Host host)
@@ -47,6 +51,8 @@ public class ClientTCP extends Thread
 	}
 	public String getIP()
 	{
+		Log.d("getIP()", socket.toString());
+		Log.d("getIP()", socket.getInetAddress().toString());
 		return socket.getInetAddress().getHostAddress();
 	}
 	public InetAddress getInetAddress()
@@ -59,6 +65,8 @@ public class ClientTCP extends Thread
 	{
 		System.out.println("Start thread " + this.getId());
 		initStreams();
+
+
 		sayHello();
 		
 		listenSocket();
@@ -70,13 +78,17 @@ public class ClientTCP extends Thread
 	private void initStreams()
 	{
 		try
-		{
+        {
 			out = new PrintStream(socket.getOutputStream());
 			in = socket.getInputStream();
 		}
 		catch(IOException ex)
 		{
-			Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
+			Log.e("initStreams()", "IOException");
+		}
+		catch(NullPointerException ex)
+		{
+			Log.e("initStreams()", "NullPointerException");
 		}
 	}
 
@@ -88,6 +100,7 @@ public class ClientTCP extends Thread
 	
 	private void sayHello()
 	{
+		System.out.println("Say Hello!");
 		out.print((char)DataHandler.HELLO_MSG + DataHandler.localhost.name);
 		out.flush();
 	}
@@ -96,11 +109,11 @@ public class ClientTCP extends Thread
 	{
 		while(!socket.isClosed())
 		{
-			String command = readStream(in);
-			if(command.length() == 0)
+			String trame = readStream(in);
+			if(trame.length() == 0)
 				break;
-			//System.out.println(command);
-			DataHandler.networkMessage((int)(command.charAt(0)), command, parentHost);
+			String data = trame.substring(1);
+			DataHandler.networkMessage((int)(trame.charAt(0)), data, parentHost);
 		}
 	}
 	private String readStream(InputStream in)
@@ -119,7 +132,7 @@ public class ClientTCP extends Thread
 		}
 		catch(IOException ex)
 		{
-			Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
+			System.out.println("readStram() : IOException");
 		}
 		return result;
 	}

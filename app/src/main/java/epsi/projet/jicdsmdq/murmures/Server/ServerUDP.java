@@ -48,9 +48,7 @@ public class ServerUDP extends Thread
 			DatagramPacket packet = new DatagramPacket(data, DATA_SIZE);
 			try
 			{
-				System.out.println("listen UDP");
 				listener.receive(packet);
-				System.out.println("received UDP");
 			}
 			catch(IOException ex)
 			{

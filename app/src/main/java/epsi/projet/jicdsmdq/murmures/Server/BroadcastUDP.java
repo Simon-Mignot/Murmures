@@ -35,8 +35,9 @@ public class BroadcastUDP extends Thread
         {
 
             try {
-                sleep(interval);
                 sendBroadcast();
+                System.out.println(DataHandler.knownHostList);
+                sleep(interval);
             } catch(InterruptedException e) {
                 e.printStackTrace();
             } catch(IOException e) {

@@ -59,14 +59,18 @@ public class Host
 	@Override
 	public String toString()
 	{
-		return (name + '\n' + tcp.getIP());
+		String ip = "";
+		if(tcp == null)
+			ip = "localhost";
+		else
+			ip = tcp.getIP();
+		return (name + " - " + ip);
 	}
 	@Override
 	public boolean equals(Object o)
 	{
 		if(o != null && o instanceof Host)
-			return (name.equals(((Host)o).name)
-				 && tcp.getIP().equals(((Host)o).tcp.getIP()));
+			return (name.equals(((Host)o).name));
 		return false;
 	}
 }

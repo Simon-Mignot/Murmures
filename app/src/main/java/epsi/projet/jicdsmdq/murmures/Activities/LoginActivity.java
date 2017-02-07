@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity
         setTitle(getString(R.string.login_label_menu));
 
         editTextPseudo = (EditText) findViewById(R.id.editTextPseudo);
+        editTextPseudo.setText(android.os.Build.MODEL);
         textInputLayoutPseudo = (TextInputLayout) findViewById(R.id.textInputLayoutPseudo);
         loginButton = (Button) findViewById(R.id.buttonConnexion);
 

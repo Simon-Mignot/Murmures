@@ -143,10 +143,10 @@ public class HomeActivity extends AppCompatActivity
                 rootView = inflater.inflate(R.layout.activity_chatall, container, false);
                 final ListView list = (ListView) rootView.findViewById(R.id.textchatall);
 
-                /*this.getContext(),
-                        android.R.layout.simple_list_item_1, DataHandler.globalMessage*/
+                ArrayAdapter ad = new ArrayAdapter(this.getContext(),
+                        android.R.layout.simple_list_item_1, DataHandler.globalMessage);
 
-                BaseAdapter ad = new BaseAdapter() {
+                /*BaseAdapter ad = new BaseAdapter() {
                     @Override
                     public int getCount() {
                         return DataHandler.globalMessage.size();
@@ -166,9 +166,9 @@ public class HomeActivity extends AppCompatActivity
                     public View getView(int position, View convertView, ViewGroup parent) {
                         return null;
                     }
-                };
+                };*/
                 list.setAdapter(ad);
-                list.post(new Runnable()
+                /*list.post(new Runnable()
                 {
                     @Override
                     public void run()
@@ -176,7 +176,7 @@ public class HomeActivity extends AppCompatActivity
                         // Select the last row so it will scroll into view...
                         Log.d("nbmessage", "post");
                     }
-                });
+                });*/
 
                 DataHandler.setList(list);
 
@@ -194,7 +194,6 @@ public class HomeActivity extends AppCompatActivity
                             DataHandler.networkSend(new Message(DataHandler.localhost, message.getText().toString()));
                             message.setText("");
                             list.setSelection(list.getAdapter().getCount() - 1);
-
                         }
                     }
                 });
@@ -206,6 +205,14 @@ public class HomeActivity extends AppCompatActivity
             } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 3)
             {
                 rootView = inflater.inflate(R.layout.activity_chat1to1, container, false);
+                final ListView list = (ListView) rootView.findViewById(R.id.listUser);
+
+                ArrayAdapter ad = new ArrayAdapter(this.getContext(),
+                        android.R.layout.simple_list_item_1, DataHandler.knownHostList);
+                list.setAdapter(ad);
+
+
+
             }
 
             /*TextView textView = (TextView) rootView.findViewById(R.id.section_label);
