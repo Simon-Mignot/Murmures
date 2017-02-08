@@ -146,12 +146,13 @@ public class DataHandler
     {
         for(Host h : knownHostList)
         {
-            if(h.annoucementName.equals(name))
+            if(h.annoucementName.equals(name) && h.name.length() > 0)
             {
                 host.name = getNewHostname(name, host.tcp.getInetAddress().getAddress());
                 return;
             }
         }
+        host.name = name;
     }
 	
 	static private void receivedAnnoucementMessage(String data, InetAddress ip)

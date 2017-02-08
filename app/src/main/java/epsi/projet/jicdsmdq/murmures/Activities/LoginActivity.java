@@ -38,8 +38,8 @@ public class LoginActivity extends AppCompatActivity
 
         editTextPseudo = (EditText) findViewById(R.id.editTextPseudo);
 
-        //String debugPseudo = android.os.Build.MODEL;
-        String debugPseudo = "Same";
+        String debugPseudo = android.os.Build.MODEL;
+        //String debugPseudo = "Same";
         editTextPseudo.setText(debugPseudo);
 
 
