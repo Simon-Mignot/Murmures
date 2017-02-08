@@ -149,6 +149,18 @@ public class ClientTCP extends Thread
 		}
 		return result;
 	}
+
+    public void disconnect()
+    {
+        try
+        {
+            socket.close();
+        }
+        catch(IOException ex)
+        {
+            Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 	
 	private void close()
 	{

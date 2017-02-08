@@ -117,6 +117,13 @@ public class DataHandler
         return result;
     }
 
+    static public void disconnect()
+    {
+        for(Host h : knownHostList)
+            if(h.tcp != null)
+                h.tcp.disconnect();
+    }
+
 	static public void networkSend(Message message)
 	{
 		//if(message.host == localhost)
