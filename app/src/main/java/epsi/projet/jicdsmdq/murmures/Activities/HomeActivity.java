@@ -151,7 +151,7 @@ public class HomeActivity extends AppCompatActivity
                 rootView = inflater.inflate(R.layout.activity_chatall, container, false);
 
                 recyclerView = (RecyclerView) rootView.findViewById(R.id.textchatall);
-                adapter = new MyAdapter(this.getContext(), DataHandler.globalMessage, pseudo);
+                adapter = new MyAdapter(this.getContext(), DataHandler.globalMessage);
 
                 GridLayoutManager myGridLayoutManager = new GridLayoutManager(this.getContext(), 1);
 
