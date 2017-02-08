@@ -33,6 +33,8 @@ public class DataHandler
 	static final public int HELLO_MSG = 0x02;
 	static final public int GLOBAL_MESSAGE_MSG = 0x04;
 
+    static final public String version = "alpha1.x-undefined";
+
     static public boolean options_stalkerMode = false;
     static public String options_vibratorPattern = "100,100,100";
 
