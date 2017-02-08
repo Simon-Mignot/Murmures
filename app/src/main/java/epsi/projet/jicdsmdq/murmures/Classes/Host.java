@@ -18,23 +18,39 @@ import epsi.projet.jicdsmdq.murmures.Server.ClientTCP;
 public class Host
 {
 	public String name;
+    public String annoucementName = "blop";
 	public ClientTCP tcp;
 	public Date lastKeepalive;
 
 	public Host(String name)
 	{
 		this.name = name;
+        this.annoucementName = name;
 		tcp = null;
+
 	}
 	public Host(String _name, ClientTCP _tcp)
 	{
 		System.out.println("new host : " + _name);
 		name = _name;
+        annoucementName = _name;
 		tcp = _tcp;
 		tcp.setHost(this);
 		tcp.start();
 		lastKeepalive = new Date();
 	}
+
+    public Host(String _name, String altName, ClientTCP _tcp)
+    {
+        System.out.println("new host : " + _name);
+        name = altName;
+        annoucementName = _name;
+        tcp = _tcp;
+        tcp.setHost(this);
+        tcp.start();
+        lastKeepalive = new Date();
+    }
+
 	public boolean isLocalhost()
 	{
 		return tcp == null;

@@ -79,7 +79,8 @@ public class DataHandler
 				break;
 
 			case HELLO_MSG:
-				((Host)host).name = data;
+                ((Host)host).annoucementName = data;
+                setNameHelloMsg(((Host)host), data);
 				break;
 			
 			case GLOBAL_MESSAGE_MSG:
@@ -133,32 +134,64 @@ public class DataHandler
  			 && host.name.length() == 0
 			 );
 	}
-	
+
+	/*
+        behavior when the host name is known
+            return true if keepalive,
+            false if a new name have to be generated
+
+	 */
+
+    static public void setNameHelloMsg(Host host, String name)
+    {
+        for(Host h : knownHostList)
+        {
+            if(h.annoucementName.equals(name))
+            {
+                host.name = getNewHostname(name, host.tcp.getInetAddress().getAddress());
+                return;
+            }
+        }
+    }
 	
 	static private void receivedAnnoucementMessage(String data, InetAddress ip)
 	{
 		String str_ip = ip.getHostAddress();
+        String altName = getNewHostname(data, ip.getAddress());
+        boolean isAltName = false;
 		for(Host host : knownHostList)
 		{
-			if(host == localhost)
-				continue;
-			else if(host.name.equals(data))
-			{
-				if(host.tcp.getIP().equals(str_ip))
-				{
-					host.resetKeepalive();
-					return;
-				}
-				else
-					data = getNewHostname(data, ip.getAddress());
-			}
-			else if(hostIsWaitingHello(host, str_ip))
-				return;
+            Log.e("DEBUG", host.annoucementName + " == " + data + " ? " + host.annoucementName.equals(data) + "(" + (host.tcp == null ? "null" : host.tcp.getIP()) + ")");
+            Log.e("DEBUG", host.annoucementName + " " + host.name);
+            Log.e("DEBUG", Integer.toString(host.annoucementName.length()));
+            Log.e("DEBUG", " ");
+            if(host.annoucementName.equals(data))
+            {
+                if(host.tcp != null && host.tcp.getIP().equals(str_ip))
+                {
+                    host.resetKeepalive();
+                    return;
+                }
+                else// if(host.tcp != null)
+                {
+                    isAltName = true;
+                }
+            }
+            else if(host == localhost)
+                continue;
+            else if(hostIsWaitingHello(host, str_ip))
+                return;
 		}
 
 		try
 		{
-			knownHostList.add(new Host(data, new ClientTCP(str_ip)));
+            Host newHost;
+            ClientTCP tcpClient = new ClientTCP(str_ip);
+            if(isAltName)
+                newHost = new Host(data, altName, tcpClient);
+            else
+                newHost = new Host(data, tcpClient);
+			knownHostList.add(newHost);
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -175,3 +208,45 @@ public class DataHandler
 
 
 }
+
+
+/*
+
+
+
+
+
+
+
+            if(host.tcp != null)
+                Log.e("IP DEBUG", host.tcp.getIP());
+
+            if(host.tcp == null && host != localhost)
+            {
+                knownHostList.remove(host);
+                continue;
+            }
+            else if(host.name.equals(data))
+            {
+                if(host.tcp != null && host.tcp.getIP().equals(str_ip) && host.tcp.getIP().length() > 0)
+                {
+                    host.resetKeepalive();
+                    return;
+                }
+                data = altName;
+                break;
+            }
+            else if(host.name.equals(altName))
+            {
+                // altName can't be localhost, so tcp is never null
+                if(host.tcp.getIP().equals(str_ip))
+                    host.resetKeepalive();
+                //altName with a different IP is theoretically not possible
+                return;
+            }
+            else if(host == localhost)
+                continue;
+            else if(hostIsWaitingHello(host, str_ip))
+                return;
+
+ */
