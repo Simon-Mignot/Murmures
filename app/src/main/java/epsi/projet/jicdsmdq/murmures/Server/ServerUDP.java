@@ -38,6 +38,25 @@ public class ServerUDP extends Thread
 		}
 	}
 
+	private byte[] removeNullBytes(byte[] data)
+	{
+		int dataLength = 0;
+		for(int i = 0; i < data.length; ++i)
+		{
+			if(data[i] == 0)
+			{
+				dataLength = i;
+				break;
+			}
+		}
+		byte[] result = new byte[dataLength];
+
+		for(int i = 0; i < dataLength; ++i)
+			result[i] = data[i];
+
+		return result;
+	}
+
 
 	@Override
 	public void run()
@@ -54,7 +73,8 @@ public class ServerUDP extends Thread
 			{
 				Logger.getLogger(ServerUDP.class.getName()).log(Level.SEVERE, null, ex);
 			}
-			Log.d("NETWORK", "IN - UDP - (ANNOUCEMENT_MSG) " + (int)data[0] + " " + packet.getAddress().getHostAddress() + ": " + new String(packet.getData()));
+			data = removeNullBytes(data);
+			Log.d("NETWORK", "IN - UDP - (ANNOUCEMENT_MSG) " + (int)data[0] + " " + packet.getAddress().getHostAddress() + ": " + new String(data));
 			if(!Server.localAddresses.contains(packet.getAddress().getHostAddress()))
 				DataHandler.networkMessage(DataHandler.ANNOUCEMENT_MSG, data, packet.getAddress());
 		}

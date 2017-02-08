@@ -60,7 +60,6 @@ public class ServerTCP extends Thread
 			} catch (SocketException e) {
 				e.printStackTrace();
 			}
-			//DataHandler.networkMessage(DataHandler.ANNOUCEMENT_MSG, data, packet.getAddress());*/
 		}
 	}
 }

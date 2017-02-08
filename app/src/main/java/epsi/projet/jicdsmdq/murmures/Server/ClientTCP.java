@@ -100,7 +100,7 @@ public class ClientTCP extends Thread
 	public void sendMessage(Message msg)
 	{
 		Log.i("NETWORK", "OUT - TCP - GLOBAL_MSG " + (char)DataHandler.GLOBAL_MESSAGE_MSG + msg.toString());
-		out.println((char)DataHandler.GLOBAL_MESSAGE_MSG + msg.toString());
+		out.print(Character.toString((char)DataHandler.GLOBAL_MESSAGE_MSG) + msg.getMessage() + '\n');
 		out.flush();
 	}
 	
@@ -108,7 +108,7 @@ public class ClientTCP extends Thread
 	{
 		Log.i("NETWORK", "OUT - TCP - HELLO_MSG " + (char)DataHandler.HELLO_MSG + DataHandler.localhost.name);
 		Log.w("sayHello", out.toString());
-		out.print((char)DataHandler.HELLO_MSG + DataHandler.localhost.name + '\n');
+		out.print(Character.toString((char)DataHandler.HELLO_MSG) + DataHandler.localhost.name + '\n');
 		//out.flush();
 	}
 	
@@ -123,6 +123,7 @@ public class ClientTCP extends Thread
 			Log.d("NETWORK", "IN - TCP - " + trame.charAt(0) + " " + data);
 			DataHandler.networkMessage((int)(trame.charAt(0)), data, parentHost);
 		}
+		close();
 	}
 	private String readStream(InputStream in)
 	{

@@ -44,7 +44,8 @@ public class DataHandler
 		@Override
 		public void run()
 		{
-			list.notifyDataSetChanged();
+			if(list != null)
+				list.notifyDataSetChanged();
 		}
 	};
 
@@ -74,11 +75,11 @@ public class DataHandler
 			case ANNOUCEMENT_MSG:
 				//System.out.println("Annoucement from: " + data);
 				receivedAnnoucementMessage(data, (InetAddress)host);
-				globalMessage.add(new Message(localhost, "NetworkEvent " + data));
+				//globalMessage.add(new Message(localhost, "NetworkEvent " + data));
 				break;
 
 			case HELLO_MSG:
-				((Host)host).name = "HELLO-" + data;
+				((Host)host).name = data;
 				break;
 			
 			case GLOBAL_MESSAGE_MSG:
@@ -87,6 +88,7 @@ public class DataHandler
 					System.out.println((m.host.name == localhost.name ? ">" : "<") + m.toString() + '\n');
 				break;
 		}
+		handler.post(updateUI);
 	}
 
 	static public void networkSend(Message message)
@@ -157,7 +159,6 @@ public class DataHandler
 		try
 		{
 			knownHostList.add(new Host(data, new ClientTCP(str_ip)));
-			handler.post(updateUI);
 		} catch (IOException e)
 		{
 			e.printStackTrace();

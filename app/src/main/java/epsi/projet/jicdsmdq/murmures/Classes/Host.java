@@ -59,12 +59,9 @@ public class Host
 	@Override
 	public String toString()
 	{
-		String ip = "";
-		if(tcp == null)
-			ip = "localhost";
-		else
-			ip = tcp.getIP();
-		return (name + " - " + ip);
+		String ip = tcp == null ? "localhost" : tcp.getIP();
+		long time = lastKeepalive != null ? ((new Date()).getTime() - lastKeepalive.getTime()) : -1;
+		return (name + " - " + ip + " (" + time + ")");
 	}
 	@Override
 	public boolean equals(Object o)

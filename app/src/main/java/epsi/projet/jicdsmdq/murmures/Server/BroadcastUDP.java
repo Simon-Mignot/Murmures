@@ -51,7 +51,7 @@ public class BroadcastUDP extends Thread
         System.out.println("initPacket()");
         try
         {
-            String msg = DataHandler.ANNOUCEMENT_MSG + DataHandler.localhost.name;
+            String msg = Character.toString((char)DataHandler.ANNOUCEMENT_MSG) + DataHandler.localhost.name;
             byte[] data = msg.getBytes();
             socket = new DatagramSocket();
             return new DatagramPacket(data, data.length, InetAddress.getByName("255.255.255.255"), port);
