@@ -2,13 +2,10 @@ package epsi.projet.jicdsmdq.murmures.Activities;
 
 import android.Manifest;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
@@ -25,26 +22,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
-import epsi.projet.jicdsmdq.murmures.Classes.Group;
-import epsi.projet.jicdsmdq.murmures.Classes.GroupeList;
 import epsi.projet.jicdsmdq.murmures.Classes.Message;
 import epsi.projet.jicdsmdq.murmures.Classes.Host;
-import epsi.projet.jicdsmdq.murmures.Classes.UserList;
-import epsi.projet.jicdsmdq.murmures.Classes.User;
 import epsi.projet.jicdsmdq.murmures.R;
 import epsi.projet.jicdsmdq.murmures.Server.Server;
 
@@ -176,6 +163,8 @@ public class HomeActivity extends AppCompatActivity
 
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setAdapter(adapter);
+
+                DataHandler.setGlobalMessagesRead();
 
                 final View sendView=rootView;
                 final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);

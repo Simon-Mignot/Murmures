@@ -59,6 +59,33 @@ public class DataHandler
 		}
 	};
 
+    static public void setGlobalMessagesRead()
+    {
+        new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try {
+                    Thread.sleep(5000);
+                    for(Message msg : globalMessage)
+                        msg.read = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+
+    static public int countUnreadGlobalMessages()
+    {
+        int count = 0;
+        for(Message msg : globalMessage)
+            if(!msg.read)
+                ++count;
+        return count;
+    }
+
 
 	static public void setList(ArrayAdapter _list)
 	{
