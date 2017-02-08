@@ -178,7 +178,7 @@ public class HomeActivity extends AppCompatActivity
                     }
                 });*/
 
-                DataHandler.setList(list);
+
 
                 final View sendView = rootView;
                 final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);
@@ -210,7 +210,7 @@ public class HomeActivity extends AppCompatActivity
                 ArrayAdapter ad = new ArrayAdapter(this.getContext(),
                         android.R.layout.simple_list_item_1, DataHandler.knownHostList);
                 list.setAdapter(ad);
-
+                DataHandler.setList(ad);
 
 
             }

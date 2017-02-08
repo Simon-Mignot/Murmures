@@ -69,6 +69,7 @@ public class BroadcastUDP extends Thread
 
     private void sendBroadcast() throws IOException
     {
+        Log.i("NETWORK", "OUT - sendBroadCast()");
         socket.send(udp);
     }
 }

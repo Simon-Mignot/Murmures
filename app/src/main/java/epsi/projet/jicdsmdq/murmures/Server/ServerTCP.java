@@ -10,6 +10,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,10 +54,13 @@ public class ServerTCP extends Thread
 			if(socket == null)
 				continue;
 
-			System.out.println("TCP - " + new String(socket.getRemoteSocketAddress() + " : " + socket.getLocalPort() + " - " + socket.getPort()));
-			DataHandler.knownHostList.add(new Host("", new ClientTCP(socket)));
-			/*if(!Server.localAddresses.contains(packet.getAddress().getHostAddress()))
-				DataHandler.networkMessage(DataHandler.ANNOUCEMENT_MSG, data, packet.getAddress());*/
+			Log.d("NETWORK", "IN - TCP - " + socket.getRemoteSocketAddress() + " : " + socket.getLocalPort() + " - " + socket.getPort());
+			try {
+				DataHandler.knownHostList.add(new Host("", new ClientTCP(socket)));
+			} catch (SocketException e) {
+				e.printStackTrace();
+			}
+			//DataHandler.networkMessage(DataHandler.ANNOUCEMENT_MSG, data, packet.getAddress());*/
 		}
 	}
 }

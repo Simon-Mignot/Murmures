@@ -54,7 +54,7 @@ public class ServerUDP extends Thread
 			{
 				Logger.getLogger(ServerUDP.class.getName()).log(Level.SEVERE, null, ex);
 			}
-			System.out.println("UDP - " + new String(packet.getAddress().getHostAddress()) + ": " + new String(packet.getData()));
+			Log.d("NETWORK", "IN - UDP - (ANNOUCEMENT_MSG) " + (int)data[0] + " " + packet.getAddress().getHostAddress() + ": " + new String(packet.getData()));
 			if(!Server.localAddresses.contains(packet.getAddress().getHostAddress()))
 				DataHandler.networkMessage(DataHandler.ANNOUCEMENT_MSG, data, packet.getAddress());
 		}

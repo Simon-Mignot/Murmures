@@ -5,14 +5,21 @@
  */
 package epsi.projet.jicdsmdq.murmures.Classes;
 
+import android.os.Handler;
+import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.concurrent.RunnableFuture;
 
+import epsi.projet.jicdsmdq.murmures.Activities.HomeActivity;
 import epsi.projet.jicdsmdq.murmures.Server.ClientTCP;
+import epsi.projet.jicdsmdq.murmures.Server.Server;
 
 /**
  *
@@ -29,10 +36,20 @@ public class DataHandler
 	static public Host localhost;
 	static public LinkedList<Host> knownHostList = new LinkedList<Host>();
 	static public LinkedList<Message> globalMessage = new LinkedList<Message>();
-	static public ListView list;
+	static public ArrayAdapter list;
+
+	static final Handler handler = new Handler();
+	static final Runnable updateUI = new Runnable()
+	{
+		@Override
+		public void run()
+		{
+			list.notifyDataSetChanged();
+		}
+	};
 
 
-	static public void setList(ListView _list)
+	static public void setList(ArrayAdapter _list)
 	{
 		list = _list;
 	}
@@ -61,12 +78,11 @@ public class DataHandler
 				break;
 
 			case HELLO_MSG:
-				((Host)host).name = data;
+				((Host)host).name = "HELLO-" + data;
 				break;
 			
 			case GLOBAL_MESSAGE_MSG:
 				globalMessage.add(new Message((Host)host, data));
-				//((BaseAdapter)(list.getAdapter())).notifyDataSetChanged();
 				for(Message m : globalMessage)
 					System.out.println((m.host.name == localhost.name ? ">" : "<") + m.toString() + '\n');
 				break;
@@ -105,6 +121,16 @@ public class DataHandler
 			id += (int)c;
 		return name + '-' + String.format("%08X", id);
 	}
+
+	static private boolean hostIsWaitingHello(Host host, String ip)
+	{
+		Date before = new Date();
+		before.setTime(before.getTime() - Server.HELLO_WAITING_TIME_MS);
+
+		return (host.tcp.getIP().equals(ip)
+ 			 && host.name.length() == 0
+			 );
+	}
 	
 	
 	static private void receivedAnnoucementMessage(String data, InetAddress ip)
@@ -114,7 +140,6 @@ public class DataHandler
 		{
 			if(host == localhost)
 				continue;
-				//data = getNewHostname(data, ip.getAddress());
 			else if(host.name.equals(data))
 			{
 				if(host.tcp.getIP().equals(str_ip))
@@ -125,11 +150,14 @@ public class DataHandler
 				else
 					data = getNewHostname(data, ip.getAddress());
 			}
+			else if(hostIsWaitingHello(host, str_ip))
+				return;
 		}
 
 		try
 		{
 			knownHostList.add(new Host(data, new ClientTCP(str_ip)));
+			handler.post(updateUI);
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -141,4 +169,8 @@ public class DataHandler
 		System.out.println("Remove : " + host.name);
 		knownHostList.remove(host);
 	}
+
+
+
+
 }

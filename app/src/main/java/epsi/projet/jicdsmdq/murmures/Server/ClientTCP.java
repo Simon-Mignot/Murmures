@@ -31,18 +31,23 @@ public class ClientTCP extends Thread
 	
 	private PrintStream out;
 	private InputStream in;
+
+	private boolean noHello;
 	
 	public ClientTCP(String ip) throws IOException
 	{
 		socket = new Socket(ip, Server.TCP_PORT);
 		socket.setSoTimeout(0);
+		noHello = false;
 		if (socket == null)
 			System.out.println("socket null");
 	}
 
-	public ClientTCP(Socket socket)
+	public ClientTCP(Socket socket) throws SocketException
 	{
 		this.socket = socket;
+		this.socket.setSoTimeout(0);
+		noHello = true;
 	}
 	
 	public void setHost(Host host)
@@ -51,9 +56,9 @@ public class ClientTCP extends Thread
 	}
 	public String getIP()
 	{
-		Log.d("getIP()", socket.toString());
-		Log.d("getIP()", socket.getInetAddress().toString());
-		return socket.getInetAddress().getHostAddress();
+		if(socket.getInetAddress() != null)
+			return socket.getInetAddress().getHostAddress();
+		return "0.0.0.0";
 	}
 	public InetAddress getInetAddress()
 	{
@@ -66,8 +71,8 @@ public class ClientTCP extends Thread
 		System.out.println("Start thread " + this.getId());
 		initStreams();
 
-
-		sayHello();
+		if(!noHello)
+			sayHello();
 		
 		listenSocket();
 	
@@ -94,15 +99,17 @@ public class ClientTCP extends Thread
 
 	public void sendMessage(Message msg)
 	{
-		out.print((char)DataHandler.GLOBAL_MESSAGE_MSG + msg.toString());
+		Log.i("NETWORK", "OUT - TCP - GLOBAL_MSG " + (char)DataHandler.GLOBAL_MESSAGE_MSG + msg.toString());
+		out.println((char)DataHandler.GLOBAL_MESSAGE_MSG + msg.toString());
 		out.flush();
 	}
 	
 	private void sayHello()
 	{
-		System.out.println("Say Hello!");
-		out.print((char)DataHandler.HELLO_MSG + DataHandler.localhost.name);
-		out.flush();
+		Log.i("NETWORK", "OUT - TCP - HELLO_MSG " + (char)DataHandler.HELLO_MSG + DataHandler.localhost.name);
+		Log.w("sayHello", out.toString());
+		out.print((char)DataHandler.HELLO_MSG + DataHandler.localhost.name + '\n');
+		//out.flush();
 	}
 	
 	private void listenSocket()
@@ -113,6 +120,7 @@ public class ClientTCP extends Thread
 			if(trame.length() == 0)
 				break;
 			String data = trame.substring(1);
+			Log.d("NETWORK", "IN - TCP - " + trame.charAt(0) + " " + data);
 			DataHandler.networkMessage((int)(trame.charAt(0)), data, parentHost);
 		}
 	}
@@ -132,7 +140,7 @@ public class ClientTCP extends Thread
 		}
 		catch(IOException ex)
 		{
-			System.out.println("readStram() : IOException");
+			System.out.println("readStream() : IOException");
 		}
 		return result;
 	}
