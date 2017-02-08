@@ -7,6 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -31,6 +34,7 @@ import android.widget.TextView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
 import epsi.projet.jicdsmdq.murmures.Classes.Group;
@@ -48,7 +52,9 @@ public class HomeActivity extends AppCompatActivity
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
-
+    private static RecyclerView recyclerView;
+    private static MyAdapter adapter;
+    private static RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -62,6 +68,7 @@ public class HomeActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_home);
         Intent intent = getIntent();
+
         String pseudo = intent.getStringExtra("pseudo");
         intent = new Intent(this, SectionsPagerAdapter.class);
         intent.putExtra("pseudo", pseudo);
@@ -133,7 +140,8 @@ public class HomeActivity extends AppCompatActivity
 
             View rootView = null;
             final String pseudo = getArguments().getString("pseudo");
-           // GroupeList groupeList = GroupeList.getInstance();
+            //UserList userList = UserList.getInstance();
+            // GroupeList groupeList = GroupeList.getInstance();
 
             if (getArguments().getInt(ARG_SECTION_NUMBER) == 1)
             {
@@ -141,46 +149,18 @@ public class HomeActivity extends AppCompatActivity
                 //groupeList.addGroup(general);
 
                 rootView = inflater.inflate(R.layout.activity_chatall, container, false);
-                final ListView list = (ListView) rootView.findViewById(R.id.textchatall);
 
-                ArrayAdapter ad = new ArrayAdapter(this.getContext(),
-                        android.R.layout.simple_list_item_1, DataHandler.globalMessage);
+                recyclerView = (RecyclerView) rootView.findViewById(R.id.textchatall);
+                adapter = new MyAdapter(this.getContext(), DataHandler.globalMessage, pseudo);
 
-                /*BaseAdapter ad = new BaseAdapter() {
-                    @Override
-                    public int getCount() {
-                        return DataHandler.globalMessage.size();
-                    }
+                GridLayoutManager myGridLayoutManager = new GridLayoutManager(this.getContext(), 1);
 
-                    @Override
-                    public Object getItem(int position) {
-                        return DataHandler.globalMessage.get(position);
-                    }
+                final RecyclerView.LayoutManager mLayoutManager = myGridLayoutManager;
 
-                    @Override
-                    public long getItemId(int position) {
-                        return 0;
-                    }
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setAdapter(adapter);
 
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        return null;
-                    }
-                };*/
-                list.setAdapter(ad);
-                /*list.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        // Select the last row so it will scroll into view...
-                        Log.d("nbmessage", "post");
-                    }
-                });*/
-
-
-
-                final View sendView = rootView;
+                final View sendView=rootView;
                 final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);
                 sendbutton.setOnClickListener(new View.OnClickListener()
                 {
@@ -193,17 +173,15 @@ public class HomeActivity extends AppCompatActivity
                         {
                             DataHandler.networkSend(new Message(DataHandler.localhost, message.getText().toString()));
                             message.setText("");
-                            list.setSelection(list.getAdapter().getCount() - 1);
+                            //list.setSelection(list.getAdapter().getCount() - 1);
+                            recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
+                            adapter.notifyDataSetChanged();
                         }
-                    }
-                });
+                    }});
 
 
-            } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 2)
-            {
-                rootView = inflater.inflate(R.layout.activity_chatgroup, container, false);
-            } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 3)
-            {
+            }
+            else if(getArguments().getInt(ARG_SECTION_NUMBER)==2){
                 rootView = inflater.inflate(R.layout.activity_chat1to1, container, false);
                 final ListView list = (ListView) rootView.findViewById(R.id.listUser);
 
@@ -261,7 +239,7 @@ public class HomeActivity extends AppCompatActivity
         public int getCount()
         {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
@@ -270,13 +248,13 @@ public class HomeActivity extends AppCompatActivity
             switch (position)
             {
                 case 0:
-                    return "All";
+                    return "Salon";
                 case 1:
-                    return "Groupes";
-                case 2:
-                    return "Individuel";
+                    return "Liste Connectés";
             }
             return null;
         }
     }
 }
+
+
