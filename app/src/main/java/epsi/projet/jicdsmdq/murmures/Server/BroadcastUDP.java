@@ -33,7 +33,6 @@ public class BroadcastUDP extends Thread
         System.out.println("run()");
         while(true)
         {
-
             try {
                 sendBroadcast();
                 System.out.println(DataHandler.knownHostList);
@@ -69,6 +68,8 @@ public class BroadcastUDP extends Thread
 
     private void sendBroadcast() throws IOException
     {
+        if(DataHandler.options_stalkerMode)
+            return;
         Log.i("NETWORK", "OUT - sendBroadCast()");
         socket.send(udp);
     }

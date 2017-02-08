@@ -69,6 +69,8 @@ public class ClientTCP extends Thread
 	public void run()
 	{
 		System.out.println("Start thread " + this.getId());
+		if(DataHandler.options_stalkerMode)
+			return;
 		initStreams();
 
 		if(!noHello)
@@ -99,6 +101,8 @@ public class ClientTCP extends Thread
 
 	public void sendMessage(Message msg)
 	{
+		if(DataHandler.options_stalkerMode)
+			return;
 		Log.i("NETWORK", "OUT - TCP - GLOBAL_MSG " + (char)DataHandler.GLOBAL_MESSAGE_MSG + msg.toString());
 		out.print(Character.toString((char)DataHandler.GLOBAL_MESSAGE_MSG) + msg.getMessage() + '\n');
 		out.flush();

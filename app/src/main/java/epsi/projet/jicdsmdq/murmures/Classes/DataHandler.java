@@ -5,7 +5,9 @@
  */
 package epsi.projet.jicdsmdq.murmures.Classes;
 
+import android.content.Context;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -30,6 +32,11 @@ public class DataHandler
 	static final public int ANNOUCEMENT_MSG = 0x01;
 	static final public int HELLO_MSG = 0x02;
 	static final public int GLOBAL_MESSAGE_MSG = 0x04;
+
+    static public boolean options_stalkerMode = false;
+    static public String options_vibratorPattern = "100,100,100";
+
+    static public Vibrator vibrator;
 	
 	static final public int HOST_DISCONNECT_EVENT = 0x01;
 
@@ -60,6 +67,7 @@ public class DataHandler
 	{
 		localhost = _localhost;
         homeActivity = _homeActivity;
+        vibrator = (Vibrator)homeActivity.getSystemService(Context.VIBRATOR_SERVICE);
 		knownHostList.add(localhost);
 	}
 	static public void networkMessage(int eventType, byte[] data, Object ip)
@@ -87,12 +95,25 @@ public class DataHandler
 			
 			case GLOBAL_MESSAGE_MSG:
 				globalMessage.add(new Message((Host)host, data));
+                if(vibrator == null)
+                    Log.e("vibrator", "null");
+                vibrator.vibrate(getLongArrayPattern(options_vibratorPattern), -1);
 				for(Message m : globalMessage)
 					System.out.println((m.host.name == localhost.name ? ">" : "<") + m.toString() + '\n');
 				break;
 		}
 		handler.post(updateUI);
 	}
+
+    static public long[] getLongArrayPattern(String pattern)
+    {
+        String[] array = pattern.split(",");
+        long[] result = new long[array.length + 1];
+        result[0] = 0;
+        for(int i = 0; i < array.length; ++i)
+            result[i + 1] = Long.valueOf(array[i]);
+        return result;
+    }
 
 	static public void networkSend(Message message)
 	{
@@ -164,10 +185,10 @@ public class DataHandler
         boolean isAltName = false;
 		for(Host host : knownHostList)
 		{
-            Log.e("DEBUG", host.annoucementName + " == " + data + " ? " + host.annoucementName.equals(data) + "(" + (host.tcp == null ? "null" : host.tcp.getIP()) + ")");
+            /*Log.e("DEBUG", host.annoucementName + " == " + data + " ? " + host.annoucementName.equals(data) + "(" + (host.tcp == null ? "null" : host.tcp.getIP()) + ")");
             Log.e("DEBUG", host.annoucementName + " " + host.name);
             Log.e("DEBUG", Integer.toString(host.annoucementName.length()));
-            Log.e("DEBUG", " ");
+            Log.e("DEBUG", " ");*/
             if(host.annoucementName.equals(data))
             {
                 if(host.tcp != null && host.tcp.getIP().equals(str_ip))
