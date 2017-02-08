@@ -4,6 +4,9 @@ import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
@@ -27,6 +30,7 @@ import android.widget.TextView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import epsi.projet.jicdsmdq.murmures.Classes.Group;
 import epsi.projet.jicdsmdq.murmures.Classes.GroupeList;
@@ -40,11 +44,16 @@ public class HomeActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
+    private static RecyclerView recyclerView;
+    private static MyAdapter adapter;
+    private static RecyclerView.LayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Intent intent = getIntent();
+
         String pseudo = intent.getStringExtra("pseudo");
         intent = new Intent(this, SectionsPagerAdapter.class);
         intent.putExtra("pseudo", pseudo);
@@ -110,42 +119,50 @@ public class HomeActivity extends AppCompatActivity {
             GroupeList groupeList = GroupeList.getInstance();
 
             if(getArguments().getInt(ARG_SECTION_NUMBER)==1){
-                 final Group general = new Group("General");
-                 groupeList.addGroup(general);
-                 rootView = inflater.inflate(R.layout.activity_chatall, container, false);
-                final ListView list = (ListView) rootView.findViewById(R.id.textchatall);
-                 ArrayAdapter ad = new ArrayAdapter(this.getContext(),
+                final Group general = new Group("General");
+                groupeList.addGroup(general);
+                rootView = inflater.inflate(R.layout.activity_chatall, container, false);
+                /* final ListView list = (ListView) rootView.findViewById(R.id.textchatall);
+                ArrayAdapter ad = new ArrayAdapter(this.getContext(),
                         android.R.layout.simple_list_item_1, general.getChannel());
-                 list.setAdapter(ad);
-                 list.post(new Runnable() {
+                list.setAdapter(ad);
+                list.post(new Runnable() {
                     @Override
                     public void run() {
                         // Select the last row so it will scroll into view...
                         Log.d("nbmessage","post");
                     }
-                });
+                }); */
 
-                 final View sendView=rootView;
-                 final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);
-                 sendbutton.setOnClickListener(new View.OnClickListener() {
+                recyclerView = (RecyclerView) rootView.findViewById(R.id.textchatall);
+                adapter = new MyAdapter(this.getContext(), general.getChannel(), pseudo);
+
+                GridLayoutManager myGridLayoutManager = new GridLayoutManager(this.getContext(), 1);
+
+                final RecyclerView.LayoutManager mLayoutManager = myGridLayoutManager;
+
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setAdapter(adapter);
+
+                final View sendView=rootView;
+                final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);
+                sendbutton.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
                         EditText message = (EditText) sendView.findViewById(R.id.messageText);
-                       if(!(message.getText().toString().matches(""))) {
-                        general.addMessage(new Message(new User(pseudo),message.getText().toString()));
-                        message.setText("");
-                           list.setSelection(list.getAdapter().getCount() - 1);
-
-                       }
-                }});
+                        if(!(message.getText().toString().matches(""))) {
+                            general.addMessage(new Message(new User(pseudo),message.getText().toString()));
+                            message.setText("");
+                            //list.setSelection(list.getAdapter().getCount() - 1);
+                            recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }});
 
 
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==2){
-                rootView = inflater.inflate(R.layout.activity_chatgroup, container, false);
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==3){
                 rootView = inflater.inflate(R.layout.activity_chat1to1, container, false);
             }
 
@@ -190,20 +207,20 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "All";
+                    return "Salon";
                 case 1:
-                    return "Groupes";
-                case 2:
-                    return "Individuel";
+                    return "Liste Connectés";
             }
             return null;
         }
     }
 }
+
+
