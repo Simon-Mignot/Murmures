@@ -34,7 +34,9 @@ import android.widget.TextView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
 import epsi.projet.jicdsmdq.murmures.Classes.Group;
@@ -73,7 +75,7 @@ public class HomeActivity extends AppCompatActivity
         intent = new Intent(this, SectionsPagerAdapter.class);
         intent.putExtra("pseudo", pseudo);
 
-        DataHandler.init(new Host(pseudo));
+        DataHandler.init(new Host(pseudo), this);
         Server server = new Server();
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -86,6 +88,11 @@ public class HomeActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+    }
+
+    public void refresh()
+    {
+        mSectionsPagerAdapter.refreshAdapters();
     }
 
     // Permet de creer le menu
@@ -118,8 +125,11 @@ public class HomeActivity extends AppCompatActivity
     {
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+        private static HashMap<String, Object> adaptersList;
+
         public PlaceholderFragment()
         {
+
         }
 
         public static PlaceholderFragment newInstance(int sectionNumber, String pseudo)
@@ -128,14 +138,15 @@ public class HomeActivity extends AppCompatActivity
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
 
+            adaptersList = new HashMap<>();
+
             args.putString("pseudo", pseudo);
             fragment.setArguments(args);
             return fragment;
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState)
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
 
             View rootView = null;
@@ -151,7 +162,13 @@ public class HomeActivity extends AppCompatActivity
                 rootView = inflater.inflate(R.layout.activity_chatall, container, false);
 
                 recyclerView = (RecyclerView) rootView.findViewById(R.id.textchatall);
-                adapter = new MyAdapter(this.getContext(), DataHandler.globalMessage, pseudo);
+                if(adaptersList.containsKey("globalChat"))
+                    adapter = (MyAdapter)adaptersList.get("globalChat");
+                else
+                {
+                    adapter = new MyAdapter(this.getContext(), DataHandler.globalMessage, pseudo);
+                    adaptersList.put("globalChat", adapter);
+                }
 
                 GridLayoutManager myGridLayoutManager = new GridLayoutManager(this.getContext(), 1);
 
@@ -184,9 +201,14 @@ public class HomeActivity extends AppCompatActivity
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==2){
                 rootView = inflater.inflate(R.layout.activity_chat1to1, container, false);
                 final ListView list = (ListView) rootView.findViewById(R.id.listUser);
-
-                ArrayAdapter ad = new ArrayAdapter(this.getContext(),
-                        android.R.layout.simple_list_item_1, DataHandler.knownHostList);
+                ArrayAdapter ad;
+                if(adaptersList.containsKey("connectedHostsList"))
+                    ad = (ArrayAdapter)adaptersList.get("connectedHostsList");
+                else
+                {
+                    ad = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, DataHandler.knownHostList);
+                    adaptersList.put("connectedHostsList", ad);
+                }
                 list.setAdapter(ad);
                 DataHandler.setList(ad);
 
@@ -206,10 +228,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
-    public void refresh()
-    {
 
-    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -219,6 +238,18 @@ public class HomeActivity extends AppCompatActivity
     {
 
         private String pseudo;
+
+        public void refreshAdapters()
+        {
+            for(Map.Entry<String, Object> entry : PlaceholderFragment.adaptersList.entrySet())
+            {
+                Object obj = entry.getValue();
+                if(obj instanceof MyAdapter)
+                    ((MyAdapter)obj).notifyDataSetChanged();
+                else if(obj instanceof ArrayAdapter)
+                    ((ArrayAdapter)obj).notifyDataSetChanged();
+            }
+        }
 
         public SectionsPagerAdapter(FragmentManager fm)
         {

@@ -37,6 +37,7 @@ public class DataHandler
 	static public LinkedList<Host> knownHostList = new LinkedList<Host>();
 	static public LinkedList<Message> globalMessage = new LinkedList<Message>();
 	static public ArrayAdapter list;
+    static public HomeActivity homeActivity;
 
 	static final Handler handler = new Handler();
 	static final Runnable updateUI = new Runnable()
@@ -44,8 +45,8 @@ public class DataHandler
 		@Override
 		public void run()
 		{
-			if(list != null)
-				list.notifyDataSetChanged();
+			if(homeActivity != null)
+				homeActivity.refresh();
 		}
 	};
 
@@ -55,9 +56,10 @@ public class DataHandler
 		list = _list;
 	}
 
-	static public void init(Host _localhost)
+	static public void init(Host _localhost, HomeActivity _homeActivity)
 	{
 		localhost = _localhost;
+        homeActivity = _homeActivity;
 		knownHostList.add(localhost);
 	}
 	static public void networkMessage(int eventType, byte[] data, Object ip)
