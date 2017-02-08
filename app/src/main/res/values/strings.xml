@@ -14,5 +14,5 @@
     <!-- HOME -->
 
     <!-- ERREUR -->
-    <string name="err_msg_pseudo">Votre Pseudo n\'est pas correct</string>
+    <string name="err_msg_pseudo">Votre nom d\'Utilisateur n\'est pas correct</string>
 </resources>

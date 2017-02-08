@@ -25,7 +25,7 @@ import epsi.projet.jicdsmdq.murmures.Server.Server;
 public class LoginActivity extends AppCompatActivity
 {
     private EditText editTextPseudo;
-    private TextInputLayout textInputLayoutPseudo;
+    private TextView textInputLayoutPseudo;
     private Button loginButton;
 
     @Override
@@ -38,17 +38,17 @@ public class LoginActivity extends AppCompatActivity
 
         editTextPseudo = (EditText) findViewById(R.id.editTextPseudo);
         editTextPseudo.setText(android.os.Build.MODEL);
-        textInputLayoutPseudo = (TextInputLayout) findViewById(R.id.textInputLayoutPseudo);
+        textInputLayoutPseudo = (TextView) findViewById(R.id.textInputLayoutPseudo);
         loginButton = (Button) findViewById(R.id.buttonConnexion);
 
         editTextPseudo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_DONE)
-                {
-                    loginButton.callOnClick();
-                }
-                return false;
+            if (actionId == EditorInfo.IME_ACTION_DONE)
+            {
+                loginButton.callOnClick();
+            }
+            return false;
             }
         });
 
@@ -58,14 +58,15 @@ public class LoginActivity extends AppCompatActivity
             public void onClick(View v) {
                 if (editTextPseudo.getText().toString().trim().isEmpty())
                 {
-                    textInputLayoutPseudo.setError(getString(R.string.err_msg_pseudo));
-                    //editTextPseudo.setHintTextColor(getResources().getColor(R.color.colorError));
+                    editTextPseudo.setError(getString(R.string.err_msg_pseudo));
+                    textInputLayoutPseudo.setTextColor(getResources().getColor(R.color.colorError));
                     Animation shake = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
                     textInputLayoutPseudo.startAnimation(shake);
                 }
                 else
                 {
                     textInputLayoutPseudo.setError(null);
+                    textInputLayoutPseudo.setTextColor(getResources().getColor(R.color.cardview_light_background));
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     intent.putExtra("pseudo", editTextPseudo.getText().toString());
                     startActivity(intent);

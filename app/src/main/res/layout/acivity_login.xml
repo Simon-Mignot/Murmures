@@ -1,40 +1,136 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.LoginActivity">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical">
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutPseudo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/editTextPseudo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryText"
-                android:maxLines="1"
-                android:maxLength="32"
-                android:inputType="text"
-                android:imeOptions="actionDone"
-                android:hint="@string/login_text_pseudo" />
-        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/buttonConnexion"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_text_connexion"
-            android:background="@color/colorPrimary"
-            android:layout_marginTop="40dp"
-            android:textColor="@android:color/white"/>
-    </LinearLayout>
+            android:text="Rejoindre"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="165dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
 
+        <TextView
+            android:id="@+id/textInputLayoutPseudo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Entrez votre nom d'Utilisateur"
+            android:textSize="17sp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="28dp"
+            android:layout_above="@+id/editTextPseudo"
+            android:layout_centerHorizontal="true"/>
+
+        <EditText
+            android:id="@+id/editTextPseudo"
+            android:maxLines="1"
+            android:maxLength="32"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:background="@color/cardview_light_background"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:padding="5dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="44dp"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_above="@+id/buttonConnexion"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/textCreditVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Version 1.0"
+            android:textSize="12sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:id="@+id/textCreditOrganisation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EPSI - 2017"
+            android:textSize="12sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+        <RelativeLayout
+            android:layout_width="150dp"
+            android:layout_height="70dp"
+            android:id="@+id/relativeLayoutCredit"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/textCreditJeanChristophe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Par Jean-Christophe Iacono"
+                android:textSize="12sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                    android:id="@+id/textCreditCorentin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Corentin Dumortier"
+                    android:textSize="12sp"
+                android:layout_below="@+id/textCreditDamien"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/textCreditDamien"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Damien Quain"
+                android:textSize="12sp"
+                android:layout_below="@+id/textCreditSimon"
+                android:layout_alignEnd="@+id/textCreditSimon" />
+
+            <TextView
+                android:id="@+id/textCreditSimon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Simon Mignot"
+                android:textSize="12sp"
+                android:layout_below="@+id/textCreditJeanChristophe"
+                android:layout_alignStart="@+id/textCreditCorentin" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:id="@+id/relativeLayoutApplicationIcon"
+            android:layout_above="@+id/textInputLayoutPseudo"
+            android:layout_alignStart="@+id/relativeLayoutCredit"
+            android:layout_marginBottom="17dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_application_murmures"
+                android:id="@+id/imageView2"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
+        </RelativeLayout>
+
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
