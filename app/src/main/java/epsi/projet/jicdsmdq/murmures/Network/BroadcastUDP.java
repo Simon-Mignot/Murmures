@@ -17,30 +17,30 @@ import epsi.projet.jicdsmdq.murmures.Handlers.OptionsHandler;
  */
 public class BroadcastUDP extends Thread
 {
-    private int interval = 2000;
     private int port;
-    private DatagramPacket udp;
-    private DatagramSocket socket;
+    private int interval;
+    private DatagramPacket udpPacket;
+    private DatagramSocket udpSocket;
 
-    public BroadcastUDP(int _port, int _interval)
+    public BroadcastUDP(int port, int interval)
     {
-        interval = _interval;
-        port = _port;
-        udp = initPacket();
+        this.interval = interval;
+        this.port = port;
+        this.udpPacket = initPacket();
     }
+
     @Override
     public void run()
     {
-        System.out.println("run()");
         while(true)
         {
-            try {
+            try
+            {
                 sendBroadcast();
-                System.out.println(DataHandler.knownHostList);
                 sleep(interval);
-            } catch(InterruptedException e) {
-                e.printStackTrace();
-            } catch(IOException e) {
+            }
+            catch(InterruptedException | IOException e)
+            {
                 e.printStackTrace();
             }
         }
@@ -48,30 +48,24 @@ public class BroadcastUDP extends Thread
 
     private DatagramPacket initPacket()
     {
-        System.out.println("initPacket()");
         try
         {
-            String msg = Character.toString((char) NetworkConstants.ANNOUCEMENT_MSG) + DataHandler.localhost.name;
+            String msg = Character.toString((char)NetworkConstants.ANNOUNCEMENT_MSG) + DataHandler.localhost.name;
             byte[] data = msg.getBytes();
-            socket = new DatagramSocket();
+            udpSocket = new DatagramSocket();
             return new DatagramPacket(data, data.length, InetAddress.getByName("255.255.255.255"), port);
         }
-        catch(UnknownHostException e)
-        {
-            System.out.println("init " + e.getMessage());
-        }
-        catch (SocketException e)
+        catch(UnknownHostException | SocketException e)
         {
             e.printStackTrace();
         }
         return null;
     }
-
     private void sendBroadcast() throws IOException
     {
         if(OptionsHandler.options_stalkerMode)
             return;
         Log.i("NETWORK", "OUT - sendBroadCast()");
-        socket.send(udp);
+        udpSocket.send(udpPacket);
     }
 }

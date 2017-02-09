@@ -25,7 +25,7 @@ public class NetworkHandler
     {
         switch(eventType)
         {
-            case NetworkConstants.ANNOUCEMENT_MSG:
+            case NetworkConstants.ANNOUNCEMENT_MSG:
                 DataHandler.receivedAnnouncementMessage(data, (InetAddress) host);
                 break;
 

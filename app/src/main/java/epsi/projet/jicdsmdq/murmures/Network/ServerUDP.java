@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epsi.projet.jicdsmdq.murmures.Network;
 
 import android.util.Log;
@@ -22,7 +17,6 @@ import epsi.projet.jicdsmdq.murmures.Handlers.NetworkHandler;
  */
 public class ServerUDP extends Thread
 {
-	final private int DATA_SIZE = 1024;
 	private DatagramSocket listener;
 	
 	ServerUDP(int port)
@@ -63,6 +57,7 @@ public class ServerUDP extends Thread
 	{
 		while(true)
 		{
+			int DATA_SIZE = 1024;
 			byte[] data = new byte[DATA_SIZE];
 			DatagramPacket packet = new DatagramPacket(data, DATA_SIZE);
 			try
@@ -74,9 +69,9 @@ public class ServerUDP extends Thread
 				Logger.getLogger(ServerUDP.class.getName()).log(Level.SEVERE, null, ex);
 			}
 			data = removeNullBytes(data);
-			Log.d("NETWORK", "IN - UDP - (ANNOUCEMENT_MSG) " + (int) data[0] + " " + packet.getAddress().getHostAddress() + ": " + new String(data));
+			Log.d("NETWORK", "IN - UDP - (ANNOUNCEMENT_MSG) " + (int) data[0] + " " + packet.getAddress().getHostAddress() + ": " + new String(data));
 			if(!Server.localAddresses.contains(packet.getAddress().getHostAddress()))
-				NetworkHandler.networkMessage(NetworkConstants.ANNOUCEMENT_MSG, data, packet.getAddress());
+				NetworkHandler.networkMessage(NetworkConstants.ANNOUNCEMENT_MSG, data, packet.getAddress());
 		}
 		
 	}

@@ -11,7 +11,7 @@ import epsi.projet.jicdsmdq.murmures.Activities.HomeActivity;
 import epsi.projet.jicdsmdq.murmures.Classes.Host;
 import epsi.projet.jicdsmdq.murmures.Classes.Message;
 import epsi.projet.jicdsmdq.murmures.Network.ClientTCP;
-import epsi.projet.jicdsmdq.murmures.Network.Server;
+import epsi.projet.jicdsmdq.murmures.Network.NetworkConstants;
 
 /**
  *
@@ -83,7 +83,7 @@ public class DataHandler
 	static private boolean hostIsWaitingHello(Host host, String ip)
 	{
 		Date before = new Date();
-		before.setTime(before.getTime() - Server.HELLO_WAITING_TIME_MS);
+		before.setTime(before.getTime() - NetworkConstants.HELLO_WAITING_TIME_MS);
 
 		return (host.tcp.getIP().equals(ip)
  			 && host.name.length() == 0

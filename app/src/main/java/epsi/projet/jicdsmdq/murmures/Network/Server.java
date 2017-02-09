@@ -13,16 +13,15 @@ import java.util.Enumeration;
 public class Server
 {
 	static public ArrayList<String> localAddresses;
-	final static public int TCP_PORT = 65501;
-	final static public int UDP_PORT = 65500;
-	final static public int ANNOUNCEMENT_INTERVAL_MS = 10000;
-	final static public int HELLO_WAITING_TIME_MS = 5000;
+
 	static public void startNetwork()
 	{
 		initLocalAddresses();
-		ServerTCP serverTCP = new ServerTCP(TCP_PORT);
-		ServerUDP serverUDP = new ServerUDP(UDP_PORT);
-		BroadcastUDP broadcastUDP = new BroadcastUDP(UDP_PORT, ANNOUNCEMENT_INTERVAL_MS);
+
+		ServerTCP serverTCP = new ServerTCP(NetworkConstants.TCP_PORT);
+		ServerUDP serverUDP = new ServerUDP(NetworkConstants.UDP_PORT);
+		BroadcastUDP broadcastUDP = new BroadcastUDP(NetworkConstants.UDP_PORT, NetworkConstants.ANNOUNCEMENT_INTERVAL_MS);
+
 		broadcastUDP.start();
 		serverUDP.start();
 		serverTCP.start();
@@ -30,24 +29,29 @@ public class Server
 
 	static private void initLocalAddresses()
 	{
-		localAddresses = new ArrayList<>();
-		Enumeration e = null;
-		try
+        localAddresses = new ArrayList<>();
+		Enumeration enumeration = getNetworkInterfaces();
+		while(enumeration.hasMoreElements())
 		{
-			e = NetworkInterface.getNetworkInterfaces();
-		} catch(SocketException e1)
-		{
-			e1.printStackTrace();
-		}
-		while(e.hasMoreElements())
-		{
-			NetworkInterface n = (NetworkInterface) e.nextElement();
-			Enumeration ee = n.getInetAddresses();
-			while (ee.hasMoreElements())
+			NetworkInterface n = (NetworkInterface)enumeration.nextElement();
+			Enumeration inetAddresses = n.getInetAddresses();
+			while(inetAddresses.hasMoreElements())
 			{
-				InetAddress i = (InetAddress) ee.nextElement();
+				InetAddress i = (InetAddress)inetAddresses.nextElement();
 				localAddresses.add(i.getHostAddress());
 			}
 		}
 	}
+    static private Enumeration getNetworkInterfaces()
+    {
+        try
+        {
+            return NetworkInterface.getNetworkInterfaces();
+        }
+        catch(SocketException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

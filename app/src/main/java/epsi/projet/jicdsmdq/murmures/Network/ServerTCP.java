@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epsi.projet.jicdsmdq.murmures.Network;
 
 import android.util.Log;
@@ -55,9 +50,12 @@ public class ServerTCP extends Thread
 				continue;
 
 			Log.d("NETWORK", "IN - TCP - " + socket.getRemoteSocketAddress() + " : " + socket.getLocalPort() + " - " + socket.getPort());
-			try {
+			try
+			{
 				DataHandler.knownHostList.add(new Host("", new ClientTCP(socket)));
-			} catch (SocketException e) {
+			}
+			catch(SocketException e)
+			{
 				e.printStackTrace();
 			}
 		}
