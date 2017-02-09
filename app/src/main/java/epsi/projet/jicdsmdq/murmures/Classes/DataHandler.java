@@ -33,7 +33,7 @@ public class DataHandler
 	static final public int HELLO_MSG = 0x02;
 	static final public int GLOBAL_MESSAGE_MSG = 0x04;
 
-    static final public String version = "alpha1.x-undefined";
+    static final public String version = "alpha2.0";
 
     static public boolean options_stalkerMode = false;
     static public String options_vibratorPattern = "100,100,100";
@@ -270,50 +270,4 @@ public class DataHandler
 		System.out.println("Remove : " + host.name);
 		knownHostList.remove(host);
 	}
-
-
-
-
 }
-
-
-/*
-
-
-
-
-
-
-
-            if(host.tcp != null)
-                Log.e("IP DEBUG", host.tcp.getIP());
-
-            if(host.tcp == null && host != localhost)
-            {
-                knownHostList.remove(host);
-                continue;
-            }
-            else if(host.name.equals(data))
-            {
-                if(host.tcp != null && host.tcp.getIP().equals(str_ip) && host.tcp.getIP().length() > 0)
-                {
-                    host.resetKeepalive();
-                    return;
-                }
-                data = altName;
-                break;
-            }
-            else if(host.name.equals(altName))
-            {
-                // altName can't be localhost, so tcp is never null
-                if(host.tcp.getIP().equals(str_ip))
-                    host.resetKeepalive();
-                //altName with a different IP is theoretically not possible
-                return;
-            }
-            else if(host == localhost)
-                continue;
-            else if(hostIsWaitingHello(host, str_ip))
-                return;
-
- */
