@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package epsi.projet.jicdsmdq.murmures.Classes;
 
 import java.util.Date;
@@ -15,28 +10,27 @@ import epsi.projet.jicdsmdq.murmures.Network.ClientTCP;
  */
 public class Host
 {
-	public String name;
+    public String name;
     public String announcementName = "blop";
-	public ClientTCP tcp;
-	public Date lastKeepalive;
+    public ClientTCP tcp;
+    private Date lastKeepalive;
 
-	public Host(String name)
-	{
-		this.name = name;
+    public Host(String name)
+    {
+        this.name = name;
         this.announcementName = name;
-		tcp = null;
-
-	}
-	public Host(String _name, ClientTCP _tcp)
-	{
-		System.out.println("new host : " + _name);
-		name = _name;
+        tcp = null;
+    }
+    public Host(String _name, ClientTCP _tcp)
+    {
+        System.out.println("new host : " + _name);
+        name = _name;
         announcementName = _name;
-		tcp = _tcp;
-		tcp.setHost(this);
-		tcp.start();
-		lastKeepalive = new Date();
-	}
+        tcp = _tcp;
+        tcp.setHost(this);
+        tcp.start();
+        lastKeepalive = new Date();
+    }
 
     public Host(String _name, String altName, ClientTCP _tcp)
     {

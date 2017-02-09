@@ -1,46 +1,57 @@
 package epsi.projet.jicdsmdq.murmures.Classes;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.widget.ArrayAdapter;
 
-import epsi.projet.jicdsmdq.murmures.Activities.HomeActivity;
+import java.util.Map;
 
 /**
- * Created by Corentin on 17/01/2017.
+ * Created by C.DUMORTIER on 09/02/2017.
  */
 
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
-    public Context mContext;
-    private String pseudo;
+public class SectionsPagerAdapter extends FragmentPagerAdapter
+{
+    public void refreshAdapters()
+    {
+        for(Map.Entry<String, Object> entry : PlaceholderFragment.adaptersList.entrySet())
+        {
+            Object obj = entry.getValue();
 
-    public SectionsPagerAdapter(Context context,FragmentManager fm) {
+            if(obj instanceof MyAdapter)
+                ((MyAdapter)obj).notifyDataSetChanged();
+            else if(obj instanceof ArrayAdapter)
+                ((ArrayAdapter)obj).notifyDataSetChanged();
+        }
+    }
+
+    public SectionsPagerAdapter(FragmentManager fm)
+    {
         super(fm);
-        mContext = context;
     }
 
     @Override
-    public Fragment getItem(int position) {
-        return HomeActivity.PlaceholderFragment.newInstance(position + 1, pseudo);
+    public Fragment getItem(int position)
+    {
+        return PlaceholderFragment.newInstance(position + 1);
     }
 
     @Override
-    public int getCount() {
-        return 3;
+    public int getCount()
+    {
+        return 2;
     }
 
     @Override
-    public CharSequence getPageTitle(int position) {
-
-        switch (position) {
-
+    public CharSequence getPageTitle(int position)
+    {
+        switch (position)
+        {
             case 0:
-                return "All";
+                return "Salon";
             case 1:
-                return "Groupes";
-            case 2:
-                return "Individuel";
+                return "Liste Connectés";
         }
         return null;
     }

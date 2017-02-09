@@ -13,10 +13,11 @@ import java.util.Date;
  */
 public class Message
 {
-	String message;
-    Date date;
+
+	private String message;
+	private Date date;
 	public boolean read;
-	public Host host;
+	protected Host host;
 	
 	public Message(Host host, String message)
 	{

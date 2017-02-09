@@ -1,4 +1,4 @@
-package epsi.projet.jicdsmdq.murmures.Activities;
+package epsi.projet.jicdsmdq.murmures.Classes;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
