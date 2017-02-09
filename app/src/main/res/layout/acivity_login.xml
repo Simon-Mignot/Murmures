@@ -75,43 +75,17 @@
             android:layout_height="70dp"
             android:id="@+id/relativeLayoutCredit"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/textCreditOrganisation">
 
             <TextView
                 android:id="@+id/textCreditJeanChristophe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Par Jean-Christophe Iacono"
+                android:text="Par L'équipe Murmures"
                 android:textSize="12sp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                    android:id="@+id/textCreditCorentin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Corentin Dumortier"
-                    android:textSize="12sp"
-                android:layout_below="@+id/textCreditDamien"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true" />
-
-            <TextView
-                android:id="@+id/textCreditDamien"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Damien Quain"
-                android:textSize="12sp"
-                android:layout_below="@+id/textCreditSimon"
-                android:layout_alignEnd="@+id/textCreditSimon" />
-
-            <TextView
-                android:id="@+id/textCreditSimon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Simon Mignot"
-                android:textSize="12sp"
-                android:layout_below="@+id/textCreditJeanChristophe"
-                android:layout_alignStart="@+id/textCreditCorentin" />
 
         </RelativeLayout>
 

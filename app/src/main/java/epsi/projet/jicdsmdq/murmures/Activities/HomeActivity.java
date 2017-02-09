@@ -111,8 +111,6 @@ public class HomeActivity extends AppCompatActivity
                 Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.action_changePseudo:
-                return true;
             case R.id.action_deconnexion:
                 return true;
 
