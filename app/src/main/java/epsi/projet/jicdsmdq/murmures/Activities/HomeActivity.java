@@ -112,6 +112,8 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(intent);
                 return true;
             case R.id.action_deconnexion:
+                DataHandler.disconnect();
+                finish();
                 return true;
 
 

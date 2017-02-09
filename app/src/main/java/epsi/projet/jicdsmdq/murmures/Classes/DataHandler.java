@@ -37,6 +37,7 @@ public class DataHandler
 
     static public boolean options_stalkerMode = false;
     static public String options_vibratorPattern = "100,100,100";
+    static public boolean options_vibrator = true;
 
     static public Vibrator vibrator;
 	
@@ -126,13 +127,19 @@ public class DataHandler
 				globalMessage.add(new Message((Host)host, data));
                 if(vibrator == null)
                     Log.e("vibrator", "null");
-                vibrator.vibrate(getLongArrayPattern(options_vibratorPattern), -1);
+                vibrer();
 				for(Message m : globalMessage)
 					System.out.println((m.host.name == localhost.name ? ">" : "<") + m.toString() + '\n');
 				break;
 		}
 		handler.post(updateUI);
 	}
+
+    static public void vibrer()
+    {
+        if(options_vibrator)
+            vibrator.vibrate(getLongArrayPattern(options_vibratorPattern), -1);
+    }
 
     static public long[] getLongArrayPattern(String pattern)
     {
