@@ -17,6 +17,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -168,13 +170,14 @@ public class HomeActivity extends AppCompatActivity
 
                 final View sendView=rootView;
                 final ImageButton sendbutton = (ImageButton) rootView.findViewById(R.id.buttonSend);
+                final EditText message = (EditText) sendView.findViewById(R.id.messageText);
                 sendbutton.setOnClickListener(new View.OnClickListener()
                 {
 
                     @Override
                     public void onClick(View v)
                     {
-                        EditText message = (EditText) sendView.findViewById(R.id.messageText);
+
                         if (message.getText().toString().length() > 0)
                         {
                             DataHandler.networkSend(new Message(DataHandler.localhost, message.getText().toString()));
@@ -184,6 +187,32 @@ public class HomeActivity extends AppCompatActivity
                             adapter.notifyDataSetChanged();
                         }
                     }});
+                message.addTextChangedListener(new TextWatcher() {
+
+
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start,
+                                              int before, int count) {
+                        if(s.length() != 0) {
+                            sendbutton.setImageResource(R.drawable.ic_send_blue_48dp);
+                            sendbutton.setClickable(true);
+                        }
+                        else {
+                            sendbutton.setImageResource(R.drawable.ic_send_white_48dp);
+                            sendbutton.setClickable(false);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
 
 
             }
