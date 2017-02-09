@@ -34,6 +34,7 @@ import java.util.Map;
 import epsi.projet.jicdsmdq.murmures.Handlers.DataHandler;
 import epsi.projet.jicdsmdq.murmures.Classes.Message;
 import epsi.projet.jicdsmdq.murmures.Classes.Host;
+import epsi.projet.jicdsmdq.murmures.Handlers.Handler;
 import epsi.projet.jicdsmdq.murmures.Handlers.NetworkHandler;
 import epsi.projet.jicdsmdq.murmures.R;
 import epsi.projet.jicdsmdq.murmures.Network.Server;
@@ -65,7 +66,7 @@ public class HomeActivity extends AppCompatActivity
         intent = new Intent(this, SectionsPagerAdapter.class);
         intent.putExtra("pseudo", pseudo);
 
-        DataHandler.init(new Host(pseudo), this);
+        Handler.init(new Host(pseudo), this);
         Server.startNetwork();
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);

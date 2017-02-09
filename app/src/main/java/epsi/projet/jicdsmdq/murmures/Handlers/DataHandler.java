@@ -36,7 +36,7 @@ public class DataHandler
 		}
 	};
 
-	static public void init(Host localhost, HomeActivity homeActivity)
+	static protected void init(Host localhost, HomeActivity homeActivity)
 	{
         DataHandler.homeActivity = homeActivity;
         DataHandler.localhost = localhost;
