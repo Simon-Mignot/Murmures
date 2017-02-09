@@ -15,12 +15,14 @@ public class Message
 {
 	String message;
     Date date;
+	boolean read;
 	public Host host;
 	
 	public Message(Host host, String message)
 	{
 		this.host = host;
 		this.message = message;
+		read = false;
 		date = new Date();
 	}
 	

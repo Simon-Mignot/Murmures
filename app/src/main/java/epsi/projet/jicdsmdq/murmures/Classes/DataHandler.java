@@ -5,7 +5,9 @@
  */
 package epsi.projet.jicdsmdq.murmures.Classes;
 
+import android.content.Context;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -30,6 +32,13 @@ public class DataHandler
 	static final public int ANNOUCEMENT_MSG = 0x01;
 	static final public int HELLO_MSG = 0x02;
 	static final public int GLOBAL_MESSAGE_MSG = 0x04;
+
+    static final public String version = "alpha1.x-undefined";
+
+    static public boolean options_stalkerMode = false;
+    static public String options_vibratorPattern = "100,100,100";
+
+    static public Vibrator vibrator;
 	
 	static final public int HOST_DISCONNECT_EVENT = 0x01;
 
@@ -37,6 +46,7 @@ public class DataHandler
 	static public LinkedList<Host> knownHostList = new LinkedList<Host>();
 	static public LinkedList<Message> globalMessage = new LinkedList<Message>();
 	static public ArrayAdapter list;
+    static public HomeActivity homeActivity;
 
 	static final Handler handler = new Handler();
 	static final Runnable updateUI = new Runnable()
@@ -44,10 +54,37 @@ public class DataHandler
 		@Override
 		public void run()
 		{
-			if(list != null)
-				list.notifyDataSetChanged();
+			if(homeActivity != null)
+				homeActivity.refresh();
 		}
 	};
+
+    static public void setGlobalMessagesRead()
+    {
+        new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try {
+                    Thread.sleep(5000);
+                    for(Message msg : globalMessage)
+                        msg.read = true;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+
+    static public int countUnreadGlobalMessages()
+    {
+        int count = 0;
+        for(Message msg : globalMessage)
+            if(!msg.read)
+                ++count;
+        return count;
+    }
 
 
 	static public void setList(ArrayAdapter _list)
@@ -55,9 +92,11 @@ public class DataHandler
 		list = _list;
 	}
 
-	static public void init(Host _localhost)
+	static public void init(Host _localhost, HomeActivity _homeActivity)
 	{
 		localhost = _localhost;
+        homeActivity = _homeActivity;
+        vibrator = (Vibrator)homeActivity.getSystemService(Context.VIBRATOR_SERVICE);
 		knownHostList.add(localhost);
 	}
 	static public void networkMessage(int eventType, byte[] data, Object ip)
@@ -79,17 +118,38 @@ public class DataHandler
 				break;
 
 			case HELLO_MSG:
-				((Host)host).name = data;
+                ((Host)host).annoucementName = data;
+                setNameHelloMsg(((Host)host), data);
 				break;
 			
 			case GLOBAL_MESSAGE_MSG:
 				globalMessage.add(new Message((Host)host, data));
+                if(vibrator == null)
+                    Log.e("vibrator", "null");
+                vibrator.vibrate(getLongArrayPattern(options_vibratorPattern), -1);
 				for(Message m : globalMessage)
 					System.out.println((m.host.name == localhost.name ? ">" : "<") + m.toString() + '\n');
 				break;
 		}
 		handler.post(updateUI);
 	}
+
+    static public long[] getLongArrayPattern(String pattern)
+    {
+        String[] array = pattern.split(",");
+        long[] result = new long[array.length + 1];
+        result[0] = 0;
+        for(int i = 0; i < array.length; ++i)
+            result[i + 1] = Long.valueOf(array[i]);
+        return result;
+    }
+
+    static public void disconnect()
+    {
+        for(Host h : knownHostList)
+            if(h.tcp != null)
+                h.tcp.disconnect();
+    }
 
 	static public void networkSend(Message message)
 	{
@@ -133,32 +193,65 @@ public class DataHandler
  			 && host.name.length() == 0
 			 );
 	}
-	
+
+	/*
+        behavior when the host name is known
+            return true if keepalive,
+            false if a new name have to be generated
+
+	 */
+
+    static public void setNameHelloMsg(Host host, String name)
+    {
+        for(Host h : knownHostList)
+        {
+            if(h.annoucementName.equals(name) && h.name.length() > 0)
+            {
+                host.name = getNewHostname(name, host.tcp.getInetAddress().getAddress());
+                return;
+            }
+        }
+        host.name = name;
+    }
 	
 	static private void receivedAnnoucementMessage(String data, InetAddress ip)
 	{
 		String str_ip = ip.getHostAddress();
+        String altName = getNewHostname(data, ip.getAddress());
+        boolean isAltName = false;
 		for(Host host : knownHostList)
 		{
-			if(host == localhost)
-				continue;
-			else if(host.name.equals(data))
-			{
-				if(host.tcp.getIP().equals(str_ip))
-				{
-					host.resetKeepalive();
-					return;
-				}
-				else
-					data = getNewHostname(data, ip.getAddress());
-			}
-			else if(hostIsWaitingHello(host, str_ip))
-				return;
+            /*Log.e("DEBUG", host.annoucementName + " == " + data + " ? " + host.annoucementName.equals(data) + "(" + (host.tcp == null ? "null" : host.tcp.getIP()) + ")");
+            Log.e("DEBUG", host.annoucementName + " " + host.name);
+            Log.e("DEBUG", Integer.toString(host.annoucementName.length()));
+            Log.e("DEBUG", " ");*/
+            if(host.annoucementName.equals(data))
+            {
+                if(host.tcp != null && host.tcp.getIP().equals(str_ip))
+                {
+                    host.resetKeepalive();
+                    return;
+                }
+                else// if(host.tcp != null)
+                {
+                    isAltName = true;
+                }
+            }
+            else if(host == localhost)
+                continue;
+            else if(hostIsWaitingHello(host, str_ip))
+                return;
 		}
 
 		try
 		{
-			knownHostList.add(new Host(data, new ClientTCP(str_ip)));
+            Host newHost;
+            ClientTCP tcpClient = new ClientTCP(str_ip);
+            if(isAltName)
+                newHost = new Host(data, altName, tcpClient);
+            else
+                newHost = new Host(data, tcpClient);
+			knownHostList.add(newHost);
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -175,3 +268,45 @@ public class DataHandler
 
 
 }
+
+
+/*
+
+
+
+
+
+
+
+            if(host.tcp != null)
+                Log.e("IP DEBUG", host.tcp.getIP());
+
+            if(host.tcp == null && host != localhost)
+            {
+                knownHostList.remove(host);
+                continue;
+            }
+            else if(host.name.equals(data))
+            {
+                if(host.tcp != null && host.tcp.getIP().equals(str_ip) && host.tcp.getIP().length() > 0)
+                {
+                    host.resetKeepalive();
+                    return;
+                }
+                data = altName;
+                break;
+            }
+            else if(host.name.equals(altName))
+            {
+                // altName can't be localhost, so tcp is never null
+                if(host.tcp.getIP().equals(str_ip))
+                    host.resetKeepalive();
+                //altName with a different IP is theoretically not possible
+                return;
+            }
+            else if(host == localhost)
+                continue;
+            else if(hostIsWaitingHello(host, str_ip))
+                return;
+
+ */
