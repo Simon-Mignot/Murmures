@@ -1,15 +1,9 @@
 package epsi.projet.jicdsmdq.murmures.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.MenuItem;
-import android.view.Menu;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,9 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
+import epsi.projet.jicdsmdq.murmures.Handlers.MiscHandler;
 import epsi.projet.jicdsmdq.murmures.R;
-import epsi.projet.jicdsmdq.murmures.Server.Server;
 
 public class LoginActivity extends AppCompatActivity
 {
@@ -37,7 +30,7 @@ public class LoginActivity extends AppCompatActivity
         setTitle(getString(R.string.login_label_menu));
 
         editTextPseudo = (EditText) findViewById(R.id.editTextPseudo);
-        ((TextView)findViewById(R.id.textCreditVersion)).setText(DataHandler.version);
+        ((TextView)findViewById(R.id.textCreditVersion)).setText(MiscHandler.version);
 
         String debugPseudo = android.os.Build.MODEL;
         //String debugPseudo = "Same";

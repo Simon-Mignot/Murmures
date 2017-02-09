@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epsi.projet.jicdsmdq.murmures.Server;
+package epsi.projet.jicdsmdq.murmures.Network;
 
 import android.util.Log;
 
@@ -14,7 +14,7 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
+import epsi.projet.jicdsmdq.murmures.Handlers.DataHandler;
 import epsi.projet.jicdsmdq.murmures.Classes.Host;
 
 /**

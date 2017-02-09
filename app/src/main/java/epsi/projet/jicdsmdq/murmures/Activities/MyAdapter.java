@@ -1,17 +1,15 @@
 package epsi.projet.jicdsmdq.murmures.Activities;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
-import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
+import epsi.projet.jicdsmdq.murmures.Handlers.DataHandler;
 import epsi.projet.jicdsmdq.murmures.Classes.Message;
 import epsi.projet.jicdsmdq.murmures.R;
 

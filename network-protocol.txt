@@ -4,19 +4,19 @@ message ended by <LF> sender-side
 " Network Message
 'annoucement-msg'    ANNOUNCEMENT:UDP     broadcast    ->    <0x01>[:pseudo]<LF>
 'hello-msg'          HELLO:TCP            * > 1        ->    <0x02>[:pseudo]<LF>
+'global-message-msg' GLOBAL_MESSAGE:TCP   1 > *        ->    <0x04>[:message]<LF>
 
 " Network Event
 'host-disconnect-event' HOST_DISCONNECT_EVENT   0x01
 
 
-GLOBAL_MESSAGE:TCP      ->     <0x08>[:message]<LF>
 PRIVATE_MESSAGE:TCP     ->     <0x16>[:User]<0x00>[:message]<LF>
 GROUP_MESSAGE:TCP       ->     <0x32>[:Group]<0x00>[:message]<LF>
 
 User        ->    [:pseudo]<0x01>[:ip_address]
 Group       ->    [:name]
 GroupUsers  ->    [:name]<0x03>{[:User]<0x03>}
-
+ip_address  ->    <byte 0><byte 1><byte 2><byte 3>      (MSB -> LSB)
 
 
 Host send 'annoucement-msg' when :

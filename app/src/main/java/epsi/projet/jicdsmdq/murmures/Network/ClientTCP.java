@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package epsi.projet.jicdsmdq.murmures.Server;
+package epsi.projet.jicdsmdq.murmures.Network;
 
 import android.util.Log;
 
@@ -16,9 +16,11 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
+import epsi.projet.jicdsmdq.murmures.Handlers.DataHandler;
 import epsi.projet.jicdsmdq.murmures.Classes.Host;
 import epsi.projet.jicdsmdq.murmures.Classes.Message;
+import epsi.projet.jicdsmdq.murmures.Handlers.NetworkHandler;
+import epsi.projet.jicdsmdq.murmures.Handlers.OptionsHandler;
 
 /**
  *
@@ -69,7 +71,7 @@ public class ClientTCP extends Thread
 	public void run()
 	{
 		System.out.println("Start thread " + this.getId());
-		if(DataHandler.options_stalkerMode)
+		if(OptionsHandler.options_stalkerMode)
 			return;
 		initStreams();
 
@@ -101,18 +103,18 @@ public class ClientTCP extends Thread
 
 	public void sendMessage(Message msg)
 	{
-		if(DataHandler.options_stalkerMode)
+		if(OptionsHandler.options_stalkerMode)
 			return;
-		Log.i("NETWORK", "OUT - TCP - GLOBAL_MSG " + (char)DataHandler.GLOBAL_MESSAGE_MSG + msg.toString());
-		out.print(Character.toString((char)DataHandler.GLOBAL_MESSAGE_MSG) + msg.getMessage() + '\n');
+		Log.i("NETWORK", "OUT - TCP - GLOBAL_MSG " + (char) NetworkConstants.GLOBAL_MESSAGE_MSG + msg.toString());
+		out.print(Character.toString((char) NetworkConstants.GLOBAL_MESSAGE_MSG) + msg.getMessage() + '\n');
 		out.flush();
 	}
 	
 	private void sayHello()
 	{
-		Log.i("NETWORK", "OUT - TCP - HELLO_MSG " + (char)DataHandler.HELLO_MSG + DataHandler.localhost.name);
+		Log.i("NETWORK", "OUT - TCP - HELLO_MSG " + (char) NetworkConstants.HELLO_MSG + DataHandler.localhost.name);
 		Log.w("sayHello", out.toString());
-		out.print(Character.toString((char)DataHandler.HELLO_MSG) + DataHandler.localhost.name + '\n');
+		out.print(Character.toString((char) NetworkConstants.HELLO_MSG) + DataHandler.localhost.name + '\n');
 		//out.flush();
 	}
 	
@@ -125,7 +127,7 @@ public class ClientTCP extends Thread
 				break;
 			String data = trame.substring(1);
 			Log.d("NETWORK", "IN - TCP - " + trame.charAt(0) + " " + data);
-			DataHandler.networkMessage((int)(trame.charAt(0)), data, parentHost);
+			NetworkHandler.networkMessage((int) (trame.charAt(0)), data, parentHost);
 		}
 		close();
 	}
@@ -172,6 +174,6 @@ public class ClientTCP extends Thread
 		{
 			Logger.getLogger(ClientTCP.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		DataHandler.networkEvent(DataHandler.HOST_DISCONNECT_EVENT, parentHost);
+		NetworkHandler.networkEvent(NetworkConstants.HOST_DISCONNECT_EVENT, parentHost);
 	}
 }

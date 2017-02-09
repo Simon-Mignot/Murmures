@@ -5,11 +5,9 @@
  */
 package epsi.projet.jicdsmdq.murmures.Classes;
 
-import java.net.InetAddress;
 import java.util.Date;
-import java.util.Objects;
 
-import epsi.projet.jicdsmdq.murmures.Server.ClientTCP;
+import epsi.projet.jicdsmdq.murmures.Network.ClientTCP;
 
 /**
  *
@@ -18,14 +16,14 @@ import epsi.projet.jicdsmdq.murmures.Server.ClientTCP;
 public class Host
 {
 	public String name;
-    public String annoucementName = "blop";
+    public String announcementName = "blop";
 	public ClientTCP tcp;
 	public Date lastKeepalive;
 
 	public Host(String name)
 	{
 		this.name = name;
-        this.annoucementName = name;
+        this.announcementName = name;
 		tcp = null;
 
 	}
@@ -33,7 +31,7 @@ public class Host
 	{
 		System.out.println("new host : " + _name);
 		name = _name;
-        annoucementName = _name;
+        announcementName = _name;
 		tcp = _tcp;
 		tcp.setHost(this);
 		tcp.start();
@@ -44,7 +42,7 @@ public class Host
     {
         System.out.println("new host : " + _name);
         name = altName;
-        annoucementName = _name;
+        announcementName = _name;
         tcp = _tcp;
         tcp.setHost(this);
         tcp.start();

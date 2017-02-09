@@ -1,4 +1,4 @@
-package epsi.projet.jicdsmdq.murmures.Server;
+package epsi.projet.jicdsmdq.murmures.Network;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -15,14 +15,14 @@ public class Server
 	static public ArrayList<String> localAddresses;
 	final static public int TCP_PORT = 65501;
 	final static public int UDP_PORT = 65500;
-	final static public int ANNOUCEMENT_INTERVAL_MS = 10000;
+	final static public int ANNOUNCEMENT_INTERVAL_MS = 10000;
 	final static public int HELLO_WAITING_TIME_MS = 5000;
-	public Server()
+	static public void startNetwork()
 	{
 		initLocalAddresses();
 		ServerTCP serverTCP = new ServerTCP(TCP_PORT);
 		ServerUDP serverUDP = new ServerUDP(UDP_PORT);
-		BroadcastUDP broadcastUDP = new BroadcastUDP(UDP_PORT, ANNOUCEMENT_INTERVAL_MS);
+		BroadcastUDP broadcastUDP = new BroadcastUDP(UDP_PORT, ANNOUNCEMENT_INTERVAL_MS);
 		broadcastUDP.start();
 		serverUDP.start();
 		serverTCP.start();

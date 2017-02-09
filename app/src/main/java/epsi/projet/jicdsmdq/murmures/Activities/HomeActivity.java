@@ -2,13 +2,10 @@ package epsi.projet.jicdsmdq.murmures.Activities;
 
 import android.Manifest;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
@@ -26,24 +23,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
+import epsi.projet.jicdsmdq.murmures.Handlers.DataHandler;
 import epsi.projet.jicdsmdq.murmures.Classes.Message;
 import epsi.projet.jicdsmdq.murmures.Classes.Host;
+import epsi.projet.jicdsmdq.murmures.Handlers.NetworkHandler;
 import epsi.projet.jicdsmdq.murmures.R;
-import epsi.projet.jicdsmdq.murmures.Server.Server;
+import epsi.projet.jicdsmdq.murmures.Network.Server;
 
 public class HomeActivity extends AppCompatActivity
 {
@@ -73,7 +66,7 @@ public class HomeActivity extends AppCompatActivity
         intent.putExtra("pseudo", pseudo);
 
         DataHandler.init(new Host(pseudo), this);
-        Server server = new Server();
+        Server.startNetwork();
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -112,7 +105,7 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(intent);
                 return true;
             case R.id.action_deconnexion:
-                DataHandler.disconnect();
+                NetworkHandler.disconnect();
                 finish();
                 return true;
 
@@ -151,9 +144,6 @@ public class HomeActivity extends AppCompatActivity
         {
 
             View rootView = null;
-            final String pseudo = getArguments().getString("pseudo");
-            //UserList userList = UserList.getInstance();
-            // GroupeList groupeList = GroupeList.getInstance();
 
             if (getArguments().getInt(ARG_SECTION_NUMBER) == 1)
             {
@@ -191,7 +181,7 @@ public class HomeActivity extends AppCompatActivity
                     {
                         if (message.getText().toString().length() > 0)
                         {
-                            DataHandler.networkSend(new Message(DataHandler.localhost, message.getText().toString()));
+                            NetworkHandler.networkSend(new Message(DataHandler.localhost, message.getText().toString()));
                             message.setText("");
                             //list.setSelection(list.getAdapter().getCount() - 1);
                             recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
@@ -239,9 +229,6 @@ public class HomeActivity extends AppCompatActivity
                     adaptersList.put("connectedHostsList", ad);
                 }
                 list.setAdapter(ad);
-                DataHandler.setList(ad);
-
-
             }
 
             /*TextView textView = (TextView) rootView.findViewById(R.id.section_label);

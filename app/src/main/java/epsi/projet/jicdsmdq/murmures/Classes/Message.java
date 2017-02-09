@@ -15,7 +15,7 @@ public class Message
 {
 	String message;
     Date date;
-	boolean read;
+	public boolean read;
 	public Host host;
 	
 	public Message(Host host, String message)

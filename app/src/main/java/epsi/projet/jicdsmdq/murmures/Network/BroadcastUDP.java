@@ -1,4 +1,4 @@
-package epsi.projet.jicdsmdq.murmures.Server;
+package epsi.projet.jicdsmdq.murmures.Network;
 
 import android.util.Log;
 
@@ -9,7 +9,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import epsi.projet.jicdsmdq.murmures.Classes.DataHandler;
+import epsi.projet.jicdsmdq.murmures.Handlers.DataHandler;
+import epsi.projet.jicdsmdq.murmures.Handlers.OptionsHandler;
 
 /**
  * Created by Simon on 06/02/2017.
@@ -50,7 +51,7 @@ public class BroadcastUDP extends Thread
         System.out.println("initPacket()");
         try
         {
-            String msg = Character.toString((char)DataHandler.ANNOUCEMENT_MSG) + DataHandler.localhost.name;
+            String msg = Character.toString((char) NetworkConstants.ANNOUCEMENT_MSG) + DataHandler.localhost.name;
             byte[] data = msg.getBytes();
             socket = new DatagramSocket();
             return new DatagramPacket(data, data.length, InetAddress.getByName("255.255.255.255"), port);
@@ -68,7 +69,7 @@ public class BroadcastUDP extends Thread
 
     private void sendBroadcast() throws IOException
     {
-        if(DataHandler.options_stalkerMode)
+        if(OptionsHandler.options_stalkerMode)
             return;
         Log.i("NETWORK", "OUT - sendBroadCast()");
         socket.send(udp);
