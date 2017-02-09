@@ -38,13 +38,24 @@
         android:layout_below="@+id/appbar"
         android:layout_alignParentStart="true" />
 
-    <SeekBar
+    <EditText
+        android:id="@+id/editvibrator"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Pattern du vibrateur"
+        android:textColor="@color/cardview_dark_background"
+        android:layout_below="@+id/checkBox"
+        android:layout_marginTop="11dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="100dp" />
+
+    <Button
+        android:text="Tester"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/seekBar"
-        android:layout_alignBottom="@+id/checkBox"
-        android:layout_centerHorizontal="true"
-        android:max="10"
-        android:progress="0" />
+        android:id="@+id/buttontestvibrator"
+        android:layout_alignBottom="@+id/editvibrator"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
