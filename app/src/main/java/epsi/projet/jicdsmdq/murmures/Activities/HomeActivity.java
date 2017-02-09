@@ -24,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -103,11 +105,15 @@ public class HomeActivity extends AppCompatActivity
     {
         switch (item.getItemId())
         {
-            case R.id.action_settings:
+            case R.id.action_options:
+                Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_changePseudo:
+                return true;
+            case R.id.action_deconnexion:
                 return true;
 
-            case R.id.action_notifications:
-                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

@@ -26,5 +26,11 @@
             android:theme="@style/AppThemePrincipal">
         </activity>
 
+        <activity
+            android:name=".Activities.SettingsActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppThemePrincipal">
+        </activity>
+
     </application>
 </manifest>

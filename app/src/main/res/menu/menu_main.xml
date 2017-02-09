@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_notifications"
-        android:icon="@drawable/ic_notification_white_48dp"
-        android:title="@string/menu_action_notification"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/action_options"
+        android:title="@string/menu_action_settings" />
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/menu_action_settings"
+        android:id="@+id/action_changePseudo"
+        android:title="Changer Pseudo" />
+    <item
+        android:id="@+id/action_deconnexion"
+        android:title="Déconnexion"
         app:showAsAction="never" />
 </menu>
